@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تسجيل الدخول - مخيم الهلال الجنوبي</title>
+  <style>
+    body {
+      font-family: Tahoma, Arial;
+      background:#222;
+      color:#fff;
+      text-align:center;
+    }
+    .box {
+      width:360px;
+      margin:60px auto;
+      background:#333;
+      padding:25px;
+      border-radius:12px;
+      border:2px solid #f1c40f;
+    }
+    h3 { color:#f1c40f; margin-top:0; }
+    input {
+      width:90%;
+      padding:10px;
+      margin:8px 0;
+      border-radius:6px;
+      border:1px solid #555;
+      background:#444;
+      color:#fff;
+    }
+    button {
+      background:#f1c40f;
+      border:none;
+      padding:10px 25px;
+      border-radius:20px;
+      font-weight:bold;
+      cursor:pointer;
+      color:#222;
+      width:120px;
+      margin-top:10px;
+    }
+    .links a {
+      color:#f1c40f;
+      text-decoration:none;
+      font-size:14px;
+      display:block;
+      margin:4px 0;
+    }
+    .msg { margin-top:8px; font-size:13px; color:#f1c40f; }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h3>تسجيل الدخول - مخيم الهلال الجنوبي</h3>
+    <p>أدخل رقم الهوية وآخر 4 أرقام من رقم الجوال.</p>
+
+    <form id="loginForm">
+      <input type="text" id="nid" placeholder="رقم الهوية" required><br>
+      <input type="password" id="phone" placeholder="آخر 4 أرقام من الجوال"
+             maxlength="4" inputmode="numeric" required><br>
+      <button type="submit">دخول</button>
+    </form>
+
+    <div class="msg" id="msg"></div>
+
+    <div class="links">
+      <a href="https://chat.whatsapp.com/XXXXX" target="_blank">🔗 قروب الواتساب</a>
+      <a href="https://facebook.com/XXXXX" target="_blank">🔗 صفحة الفيس بوك</a>
+    </div>
+  </div>
+
+  <script>
+    // بعد ما نتفق نهائيًا، سنستخدم هذا الرابط في result.html وليس هنا
+    const INNER_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzJ_P5IcL2-jlBq5Y_v8cgO_1pyF_bflQJHrFTG8sC0ofCFZvHmpLz5ShZ9YxdveTuG/exec';
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nid   = document.getElementById('nid').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const msgEl = document.getElementById('msg');
+
+      if (!nid || !phone) {
+        msgEl.textContent = 'الرجاء إدخال رقم الهوية وآخر 4 أرقام.';
+        return;
+      }
+
+      // ننتقل إلى صفحة result.html مع الباراميترات
+      const params = new URLSearchParams({
+        national_id: nid,
+        phone: phone
+      });
+      window.location.href = 'result.html?' + params.toString();
+    });
+  </script>
+
+</body>
+</html>
