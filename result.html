@@ -30,14 +30,56 @@
       color:#ddd;
       text-align:center;
     }
-    iframe {
+
+    /* منطقة الإطار + اللودر */
+    .frame-wrapper {
+      position: relative;
       width:100%;
       height:600px;
-      border:none;
+      margin-top:10px;
       border-radius:8px;
-      background:#fff;
-      display:none; /* نخفيه إلى أن يكتمل التحميل */
+      overflow:hidden;
+      background:#111;
     }
+
+    iframe {
+      width:100%;
+      height:100%;
+      border:none;
+      display:none; /* نخفيه لحد ما يكتمل التحميل */
+    }
+
+    /* طبقة اللودر فوق الإطار */
+    .loader-overlay {
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(0,0,0,0.4);
+    }
+
+    .loader-text {
+      margin-top:10px;
+      color:#f1c40f;
+      font-size:14px;
+      text-align:center;
+    }
+
+    /* دائرة التحميل */
+    .spinner {
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      border:4px solid #f1c40f;
+      border-top-color:transparent;
+      animation:spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform:rotate(360deg); }
+    }
+
     .actions {
       margin-top:12px;
       text-align:center;
@@ -60,12 +102,6 @@
       text-align:center;
       margin:20px 0;
     }
-    .loading {
-      text-align:center;
-      margin:20px 0;
-      color:#f1c40f;
-      font-size:14px;
-    }
   </style>
 </head>
 <body>
@@ -76,13 +112,17 @@
     <div class="info" id="info"></div>
     <div id="error" class="error"></div>
 
-    <!-- رسالة انتظار أثناء تحميل البيانات -->
-    <div id="loading" class="loading">
-      جاري تحميل البيانات، يرجى الانتظار...
-    </div>
+    <!-- هنا البوكس الذي يحتوي iframe + لودر فوقه -->
+    <div class="frame-wrapper">
+      <div id="loader" class="loader-overlay">
+        <div>
+          <div class="spinner"></div>
+          <div class="loader-text">جاري تحميل البيانات، يرجى الانتظار...</div>
+        </div>
+      </div>
 
-    <!-- الإطار الذي يعرض صفحة الويب آب -->
-    <iframe id="dataFrame"></iframe>
+      <iframe id="dataFrame"></iframe>
+    </div>
 
     <div class="actions">
       <a href="index.html" class="btn btn-back">⬅ العودة لصفحة تسجيل الدخول</a>
@@ -92,8 +132,8 @@
   </div>
 
   <script>
-    // ضع هنا رابط الويب آب الداخلي من Apps Script
-    const INNER_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzJ_P5IcL2-jlBq5Y_v8cgO_1pyF_bflQJHrFTG8sC0ofCFZvHmpLz5ShZ9YxdveTuG/exec'; // استبدل ... برابطك
+    // 🔗 ضع هنا رابط الويب آب الداخلي من Apps Script
+    const INNER_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzJ_P5IcL2-jlBq5Y_v8cgO_1pyF_bflQJHrFTG8sC0ofCFZvHmpLz5ShZ9YxdveTuG/exec';
 
     const params = new URLSearchParams(window.location.search);
     const nid   = params.get('national_id') || '';
@@ -102,25 +142,26 @@
     const infoEl   = document.getElementById('info');
     const errorEl  = document.getElementById('error');
     const frame    = document.getElementById('dataFrame');
-    const loading  = document.getElementById('loading');
+    const loader   = document.getElementById('loader');
 
     if (!nid || !phone) {
       errorEl.textContent = 'تم فتح الصفحة بدون بيانات تسجيل الدخول. الرجاء العودة وإدخال البيانات.';
-      loading.style.display = 'none';
+      if (loader) loader.style.display = 'none';
     } else {
-      infoEl.innerHTML = 'تم الدخول باستخدام رقم الهوية: <strong>' + nid +
-                         '</strong> وآخر 4 أرقام من الجوال: <strong>' + phone + '</strong>.';
+      infoEl.innerHTML = 
+        'تم الدخول باستخدام رقم الهوية: <strong>' + nid +
+        '</strong> و آخر 4 أرقام من رقم الجوال: <strong>' + phone + '</strong>.';
 
       const url = INNER_WEBAPP_URL +
         '?national_id=' + encodeURIComponent(nid) +
         '&phone='       + encodeURIComponent(phone);
 
-      // نعرض رسالة الانتظار، ونملأ الإطار
+      // نبدأ تحميل صفحة Apps Script داخل الإطار
       frame.src = url;
 
-      // عندما ينتهي تحميل بيانات الويب آب، نخفي رسالة الانتظار ونظهر الإطار
+      // عندما يكتمل تحميل iframe نخفي اللودر ونظهر الإطار
       frame.onload = function() {
-        loading.style.display = 'none';
+        if (loader) loader.style.display = 'none';
         frame.style.display = 'block';
       };
     }
