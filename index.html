@@ -3,31 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <title>تسجيل الدخول - مخيم الهلال الجنوبي</title>
+
+  <!-- مهم للجوال: جعل العرض يساوي عرض الشاشة -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
-      font-family: Tahoma, Arial;
+      font-family: Tahoma, Arial, sans-serif;
       background:#222;
       color:#fff;
       text-align:center;
+      margin:0;
+      padding:0;
     }
+
     .box {
-      width:360px;
-      margin:60px auto;
       background:#333;
       padding:25px;
       border-radius:12px;
       border:2px solid #f1c40f;
+      margin:40px auto;
+      width:95%;
+      max-width:400px; /* على الشاشات الكبيرة لا يزيد عن 400px */
+      box-sizing:border-box;
     }
-    h3 { color:#f1c40f; margin-top:0; }
+
+    h3 { 
+      color:#f1c40f; 
+      margin-top:0;
+      font-size:20px;
+    }
+
+    p {
+      font-size:14px;
+      margin-bottom:15px;
+      color:#ddd;
+    }
+
     input {
-      width:90%;
+      width:100%;
       padding:10px;
       margin:8px 0;
       border-radius:6px;
       border:1px solid #555;
       background:#444;
       color:#fff;
+      box-sizing:border-box;
+      font-size:14px;
     }
+
     button {
       background:#f1c40f;
       border:none;
@@ -36,29 +60,53 @@
       font-weight:bold;
       cursor:pointer;
       color:#222;
-      width:120px;
+      width:100%; /* على الجوال يكون بعرض كامل */
       margin-top:10px;
+      font-size:15px;
     }
+
+    .links {
+      margin-top:15px;
+    }
+
     .links a {
       color:#f1c40f;
       text-decoration:none;
-      font-size:14px;
+      font-size:13px;
       display:block;
       margin:4px 0;
+      word-wrap:break-word;
     }
-    .msg { margin-top:8px; font-size:13px; color:#f1c40f; }
+
+    .msg {
+      margin-top:8px;
+      font-size:13px;
+      color:#f1c40f;
+      min-height:16px;
+    }
+
+    /* تحسين على الشاشات الصغيرة جداً */
+    @media (max-width: 480px) {
+      .box {
+        margin:20px auto;
+        padding:20px;
+      }
+      h3 { font-size:18px; }
+      p  { font-size:13px; }
+      button { font-size:14px; }
+    }
   </style>
 </head>
 <body>
 
   <div class="box">
     <h3>تسجيل الدخول - مخيم الهلال الجنوبي</h3>
-    <p>أدخل رقم الهوية وآخر 4 أرقام من رقم الجوال.</p>
+    <p>أدخل رقم الهوية وآخر 4 أرقام من رقم الجوال المسجّل.</p>
 
     <form id="loginForm">
-      <input type="text" id="nid" placeholder="رقم الهوية" required><br>
+      <input type="text" id="nid" placeholder="رقم الهوية" required>
       <input type="password" id="phone" placeholder="آخر 4 أرقام من الجوال"
-             maxlength="4" inputmode="numeric" required><br>
+             maxlength="4" inputmode="numeric" required>
       <button type="submit">دخول</button>
     </form>
 
@@ -71,9 +119,6 @@
   </div>
 
   <script>
-    // بعد ما نتفق نهائيًا، سنستخدم هذا الرابط في result.html وليس هنا
-    const INNER_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzJ_P5IcL2-jlBq5Y_v8cgO_1pyF_bflQJHrFTG8sC0ofCFZvHmpLz5ShZ9YxdveTuG/exec';
-
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const nid   = document.getElementById('nid').value.trim();
@@ -85,7 +130,10 @@
         return;
       }
 
-      // ننتقل إلى صفحة result.html مع الباراميترات
+      // تنظيف الرسالة
+      msgEl.textContent = '';
+
+      // الانتقال للصفحة الثانية مع الباراميترات
       const params = new URLSearchParams({
         national_id: nid,
         phone: phone
