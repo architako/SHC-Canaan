@@ -3,27 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <title>بياناتك - مخيم الهلال الجنوبي</title>
+
+  <!-- مهم للجوال -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
-      font-family: Tahoma, Arial;
+      font-family: Tahoma, Arial, sans-serif;
       background:#222;
       color:#fff;
       text-align:center;
+      margin:0;
+      padding:0;
     }
+
     .box {
-      width:900px;
-      margin:30px auto;
       background:#333;
       padding:20px;
       border-radius:12px;
       border:2px solid #f1c40f;
-      text-align:right;
+      margin:20px auto;
+      width:96%;
+      max-width:900px;
+      box-sizing:border-box;
     }
+
     h3 { 
       color:#f1c40f; 
       text-align:center; 
       margin-top:0;
+      font-size:20px;
     }
+
     .info {
       font-size:14px;
       margin-bottom:10px;
@@ -31,7 +42,14 @@
       text-align:center;
     }
 
-    /* منطقة الإطار + اللودر */
+    .error {
+      color:#ff7675;
+      text-align:center;
+      margin:20px 0;
+      font-size:14px;
+    }
+
+    /* إطار البوكس الداخلي */
     .frame-wrapper {
       position: relative;
       width:100%;
@@ -40,13 +58,14 @@
       border-radius:8px;
       overflow:hidden;
       background:#111;
+      box-sizing:border-box;
     }
 
     iframe {
       width:100%;
       height:100%;
       border:none;
-      display:none; /* نخفيه لحد ما يكتمل التحميل */
+      display:none; /* يُظهر بعد التحميل */
     }
 
     /* طبقة اللودر فوق الإطار */
@@ -74,6 +93,7 @@
       border:4px solid #f1c40f;
       border-top-color:transparent;
       animation:spin 1s linear infinite;
+      margin:0 auto;
     }
 
     @keyframes spin {
@@ -84,6 +104,7 @@
       margin-top:12px;
       text-align:center;
     }
+
     .btn {
       display:inline-block;
       padding:8px 16px;
@@ -94,13 +115,36 @@
       font-weight:bold;
       text-decoration:none;
       font-size:14px;
+      box-sizing:border-box;
     }
+
     .btn-back  { background:#f1c40f; color:#222; }
     .btn-link  { background:#555;   color:#fff; }
-    .error {
-      color:#ff7675;
-      text-align:center;
-      margin:20px 0;
+
+    /* تحسين للهواتف الصغيرة */
+    @media (max-width: 600px) {
+      .box {
+        margin:10px auto;
+        padding:15px;
+      }
+      h3 { font-size:18px; }
+      .info { font-size:13px; }
+      .error { font-size:13px; }
+
+      .frame-wrapper {
+        height:420px; /* أقل ارتفاع على الجوال */
+      }
+
+      .btn {
+        width:100%;  /* الأزرار بعرض كامل */
+        font-size:13px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .frame-wrapper {
+        height:360px;
+      }
     }
   </style>
 </head>
@@ -112,7 +156,7 @@
     <div class="info" id="info"></div>
     <div id="error" class="error"></div>
 
-    <!-- هنا البوكس الذي يحتوي iframe + لودر فوقه -->
+    <!-- البوكس الذي يحتوي iframe + اللودر -->
     <div class="frame-wrapper">
       <div id="loader" class="loader-overlay">
         <div>
@@ -132,7 +176,7 @@
   </div>
 
   <script>
-    // 🔗 ضع هنا رابط الويب آب الداخلي من Apps Script
+    // 🔗 رابط الويب آب الداخلي من Apps Script
     const INNER_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzJ_P5IcL2-jlBq5Y_v8cgO_1pyF_bflQJHrFTG8sC0ofCFZvHmpLz5ShZ9YxdveTuG/exec';
 
     const params = new URLSearchParams(window.location.search);
