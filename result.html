@@ -2,43 +2,55 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>بياناتك - مخيم الهلال الجنوبي</title>
 
-  <!-- مهم للجوال -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <style>
+    :root {
+      --green:   #B8DFAF;
+      --brown:   #7A5330;
+      --dark:    #2F2F2F;
+      --light:   #FFFFFF;
+      --soft:    #D9EBD4;
+    }
+
     body {
       font-family: Tahoma, Arial, sans-serif;
-      background:#222;
-      color:#fff;
+      background: var(--brown);
+      color: var(--light);
       text-align:center;
       margin:0;
       padding:0;
     }
 
     .box {
-      background:#333;
+      background: var(--dark);
       padding:20px;
-      border-radius:12px;
-      border:2px solid #f1c40f;
+      border-radius:15px;
+      border:3px solid var(--green);
       margin:20px auto;
       width:96%;
       max-width:900px;
       box-sizing:border-box;
     }
 
+    .logo {
+      width:120px;
+      margin-bottom:10px;
+    }
+
     h3 { 
-      color:#f1c40f; 
+      color: var(--green); 
       text-align:center; 
-      margin-top:0;
-      font-size:20px;
+      margin:5px 0 10px;
+      font-size:22px;
+      font-weight:bold;
     }
 
     .info {
       font-size:14px;
       margin-bottom:10px;
-      color:#ddd;
+      color: var(--soft);
       text-align:center;
     }
 
@@ -55,7 +67,7 @@
       width:100%;
       height:600px;
       margin-top:10px;
-      border-radius:8px;
+      border-radius:10px;
       overflow:hidden;
       background:#111;
       box-sizing:border-box;
@@ -75,12 +87,12 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      background:rgba(0,0,0,0.4);
+      background:rgba(0,0,0,0.45);
     }
 
     .loader-text {
       margin-top:10px;
-      color:#f1c40f;
+      color:var(--green);
       font-size:14px;
       text-align:center;
     }
@@ -90,7 +102,7 @@
       width:40px;
       height:40px;
       border-radius:50%;
-      border:4px solid #f1c40f;
+      border:4px solid var(--green);
       border-top-color:transparent;
       animation:spin 1s linear infinite;
       margin:0 auto;
@@ -101,7 +113,7 @@
     }
 
     .actions {
-      margin-top:12px;
+      margin-top:15px;
       text-align:center;
     }
 
@@ -109,7 +121,7 @@
       display:inline-block;
       padding:8px 16px;
       margin:4px;
-      border-radius:8px;
+      border-radius:20px;
       border:none;
       cursor:pointer;
       font-weight:bold;
@@ -118,8 +130,15 @@
       box-sizing:border-box;
     }
 
-    .btn-back  { background:#f1c40f; color:#222; }
-    .btn-link  { background:#555;   color:#fff; }
+    .btn-back  { background:var(--green); color:var(--brown); }
+    .btn-link  { background:#555;        color:#fff;      }
+
+    .btn-back:hover {
+      background:var(--soft);
+    }
+    .btn-link:hover {
+      background:#666;
+    }
 
     /* تحسين للهواتف الصغيرة */
     @media (max-width: 600px) {
@@ -127,7 +146,7 @@
         margin:10px auto;
         padding:15px;
       }
-      h3 { font-size:18px; }
+      h3 { font-size:20px; }
       .info { font-size:13px; }
       .error { font-size:13px; }
 
@@ -151,12 +170,15 @@
 <body>
 
   <div class="box">
-    <h3>بياناتك المسجّلة - مخيم الهلال الجنوبي</h3>
+    <!-- الشعار -->
+    <img src="LOGO.png" class="logo" alt="مخيم الهلال الجنوبي">
+
+    <h3>بياناتك المسجّلة</h3>
 
     <div class="info" id="info"></div>
     <div id="error" class="error"></div>
 
-    <!-- البوكس الذي يحتوي iframe + اللودر -->
+    <!-- البوكس الذي يحتوي iframe + لودر -->
     <div class="frame-wrapper">
       <div id="loader" class="loader-overlay">
         <div>
@@ -189,7 +211,7 @@
     const loader   = document.getElementById('loader');
 
     if (!nid || !phone) {
-      errorEl.textContent = 'تم فتح الصفحة بدون بيانات تسجيل الدخول. الرجاء العودة وإدخال البيانات.';
+      errorEl.textContent = 'تم فتح الصفحة بدون بيانات تسجيل الدخول. الرجاء العودة وإدخال البيانات من جديد.';
       if (loader) loader.style.display = 'none';
     } else {
       infoEl.innerHTML = 
