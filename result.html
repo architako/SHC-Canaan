@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>بياناتك - مخيم الهلال الجنوبي</title>
 
+  <!-- استدعاء خط Cairo من Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --green:   #B8DFAF;
@@ -15,8 +20,8 @@
     }
 
     body {
-      font-family: Tahoma, Arial, sans-serif;
-      background: #B78C5A;
+      font-family: "Cairo", Tahoma, Arial, sans-serif;
+      background: #B78C5A; /* نفس خلفية الصفحة الأولى */
       color: var(--light);
       text-align:center;
       margin:0;
@@ -44,7 +49,7 @@
       text-align:center; 
       margin:5px 0 10px;
       font-size:22px;
-      font-weight:bold;
+      font-weight:700;
     }
 
     .info {
@@ -61,7 +66,6 @@
       font-size:14px;
     }
 
-    /* إطار البوكس الداخلي */
     .frame-wrapper {
       position: relative;
       width:100%;
@@ -80,7 +84,6 @@
       display:none; /* يُظهر بعد التحميل */
     }
 
-    /* طبقة اللودر فوق الإطار */
     .loader-overlay {
       position:absolute;
       inset:0;
@@ -97,7 +100,6 @@
       text-align:center;
     }
 
-    /* دائرة التحميل */
     .spinner {
       width:40px;
       height:40px;
@@ -140,7 +142,6 @@
       background:#666;
     }
 
-    /* تحسين للهواتف الصغيرة */
     @media (max-width: 600px) {
       .box {
         margin:10px auto;
@@ -151,11 +152,11 @@
       .error { font-size:13px; }
 
       .frame-wrapper {
-        height:420px; /* أقل ارتفاع على الجوال */
+        height:420px;
       }
 
       .btn {
-        width:100%;  /* الأزرار بعرض كامل */
+        width:100%;
         font-size:13px;
       }
     }
@@ -178,7 +179,6 @@
     <div class="info" id="info"></div>
     <div id="error" class="error"></div>
 
-    <!-- البوكس الذي يحتوي iframe + لودر -->
     <div class="frame-wrapper">
       <div id="loader" class="loader-overlay">
         <div>
@@ -198,7 +198,7 @@
   </div>
 
   <script>
-    // 🔗 رابط الويب آب الداخلي من Apps Script
+    // رابط الويب آب الداخلي من Apps Script
     const INNER_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzJ_P5IcL2-jlBq5Y_v8cgO_1pyF_bflQJHrFTG8sC0ofCFZvHmpLz5ShZ9YxdveTuG/exec';
 
     const params = new URLSearchParams(window.location.search);
@@ -222,10 +222,8 @@
         '?national_id=' + encodeURIComponent(nid) +
         '&phone='       + encodeURIComponent(phone);
 
-      // نبدأ تحميل صفحة Apps Script داخل الإطار
       frame.src = url;
 
-      // عندما يكتمل تحميل iframe نخفي اللودر ونظهر الإطار
       frame.onload = function() {
         if (loader) loader.style.display = 'none';
         frame.style.display = 'block';
