@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>تسجيل الدخول - مخيم الهلال الجنوبي</title>
 
+  <!-- استدعاء خط Cairo من Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --green:   #B8DFAF;
@@ -15,8 +20,8 @@
     }
 
     body {
-      font-family: Tahoma, Arial, sans-serif;
-      background: #B78C5A;
+      font-family: "Cairo", Tahoma, Arial, sans-serif;
+      background: #B78C5A; /* اللون الذي اخترته للخلفية */
       margin:0;
       padding:0;
       text-align:center;
@@ -31,6 +36,7 @@
       width:92%;
       max-width:420px;
       border:3px solid var(--green);
+      box-sizing: border-box;
     }
 
     .logo {
@@ -42,7 +48,7 @@
       margin-top:0;
       color: var(--green);
       font-size:22px;
-      font-weight:bold;
+      font-weight:700;
     }
 
     p {
@@ -68,7 +74,7 @@
       padding:12px;
       background: var(--green);
       color: var(--brown);
-      font-weight:bold;
+      font-weight:700;
       border:none;
       border-radius:25px;
       cursor:pointer;
@@ -95,12 +101,20 @@
       min-height:20px;
     }
 
+    @media (max-width: 480px) {
+      .box {
+        margin:20px auto;
+        padding:20px;
+      }
+      h3 { font-size:20px; }
+      p  { font-size:13px; }
+      button { font-size:15px; }
+    }
   </style>
 </head>
 <body>
 
   <div class="box">
-
     <!-- الشعار -->
     <img src="LOGO.png" class="logo" alt="مخيم الهلال الجنوبي">
 
@@ -119,7 +133,6 @@
       <a href="#" target="_blank">قروب الواتساب</a>
       <a href="#" target="_blank">صفحة الفيس بوك</a>
     </div>
-
   </div>
 
   <script>
@@ -141,8 +154,8 @@
         phone: phone
       });
 
-      window.location.href = "result.html?national_id=" + nid + "&phone=" + phone + "&v=" + Date.now();
-
+      // إضافة v لتقليل مشكلة الكاش
+      window.location.href = 'result.html?' + params.toString() + '&v=' + Date.now();
     });
   </script>
 
