@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بياناتك - مخيم الهلال الجنوبي</title>
+
+  <!-- خط Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0b5a84;
+      --primary-light: #e6f2f8;
+      --accent: #b8dfaf;
+      --bg: #f5f5f5;
+      --card-bg: #ffffff;
+      --text: #222;
+      --muted: #777;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: "Cairo", system-ui, -apple-system, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      direction: rtl;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* الهيدر + المنيو */
+
+    header.site-header {
+      background-color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo img {
+      height: 80px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .header-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    nav.main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px 16px;
+    }
+
+    nav.main-nav a {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      background-color: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    nav.main-nav a:hover {
+      background-color: var(--primary-light);
+    }
+
+    nav.main-nav a.active {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 24px auto 40px;
+      padding: 0 16px;
+    }
+
+    .page-header {
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 6px;
+      font-size: 1.4rem;
+      color: var(--primary);
+    }
+
+    .page-header p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .result-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+
+    .result-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      padding: 18px 16px 16px;
+      width: 100%;
+      max-width: 800px;
+      border-top: 4px solid var(--primary);
+    }
+
+    .logo {
+      display: block;
+      width: 200px;
+      margin: 0 auto 10px;
+    }
+
+    h3 {
+      text-align: center;
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .info {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      text-align: center;
+      color: var(--text);
+    }
+
+    .error {
+      font-size: 0.9rem;
+      color: #b3261e;
+      text-align: center;
+      margin-bottom: 10px;
+      min-height: 18px;
+    }
+
+    .frame-wrapper {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #ddd;
+      background: #fafafa;
+      min-height: 260px;
+    }
+
+    iframe#dataFrame {
+      width: 100%;
+      height: 360px;
+      border: none;
+      display: none;
+    }
+
+    .loader-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.85);
+    }
+
+    .loader-text {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 4px solid var(--primary);
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .actions {
+      margin-top: 14px;
+      text-align: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-link {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    .btn-link:hover,
+    .btn:hover {
+      opacity: 0.95;
+    }
+
+    footer.site-footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #ffffff;
+      background-color: var(--primary);
+      padding: 8px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .result-card {
+        padding: 16px 12px;
+      }
+      iframe#dataFrame {
+        height: 320px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-top">
+      <div class="header-logo">
+        <img src="../LOGO.png" class="logo" alt="مخيم الهلال الجنوبي">
+        <div class="header-title">مخيم الهلال الجنوبي</div>
+      </div>
+    </div>
+    <nav class="main-nav">
+      <a href="../index.html">الصفحة الرئيسية</a>
+      <a href="../events.html">آخر الفعاليات</a>
+      <a href="../admins.html">أعضاء الإدارة</a>
+      <a href="../services.html" class="active">الخدمات الإلكترونية</a>
+      <a href="../gallery.html">ألبوم الصور</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-header">
+      <h1>بياناتك المسجّلة</h1>
+      <p>تعرض هذه الصفحة بياناتك كما هي محفوظة في نظام مخيم الهلال الجنوبي.</p>
+    </section>
+
+    <section class="result-wrapper">
+      <div class="result-card">
+        <img src="../LOGO.png" class="logo" alt="مخيم الهلال الجنوبي">
+
+        <h3>بياناتك المسجّلة</h3>
+
+        <div class="info" id="info"></div>
+        <div id="error" class="error"></div>
+
+        <div class="frame-wrapper">
+          <div id="loader" class="loader-overlay">
+            <div>
+              <div class="spinner"></div>
+              <div class="loader-text">جاري تحميل البيانات، يرجى الانتظار...</div>
+            </div>
+          </div>
+
+          <iframe id="dataFrame"></iframe>
+        </div>
+
+        <div class="actions">
+          <a href="services.html" class="btn">⬅ العودة لصفحة تسجيل الدخول</a>
+          <a href="https://chat.whatsapp.com/BfQOvIDoivYCkicUiVSv8F" target="_blank" class="btn btn-link">قروب الواتساب</a>
+          <a href="https://www.facebook.com/SHC.Canaan" target="_blank" class="btn btn-link">صفحة الفيس بوك</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    جميع الحقوق محفوظة &copy; مخيم الهلال الجنوبي
+  </footer>
+
+  <script>
+    // رابط الويب آب الداخلي من Apps Script (نفس الذي كان في الملف القديم)
+    const INNER_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzJ_P5IcL2-jlBq5Y_v8cgO_1pyF_bflQJHrFTG8sC0ofCFZvHmpLz5ShZ9YxdveTuG/exec';
+
+    const params = new URLSearchParams(window.location.search);
+const nid   = params.get('national_id') || '';
+const phone = params.get('phone') || '';
+
+const infoEl   = document.getElementById('info');
+const errorEl  = document.getElementById('error');
+const frame    = document.getElementById('dataFrame');
+const loader   = document.getElementById('loader');
+
+// دالة لضبط ارتفاع الإطار مع حدود معقولة
+function setFrameHeight(px) {
+  const min = 700;   // أقل ارتفاع
+  const max = 1400;  // أقصى ارتفاع (تقدر تعدلها)
+  const h = Math.max(min, Math.min(max, px));
+  frame.style.height = h + 'px';
+}
+
+// استقبال رسالة من صفحة Apps Script فيها ارتفاع المحتوى
+window.addEventListener('message', function (event) {
+  if (!event.data || event.data.type !== 'resize-iframe') return;
+
+  // خيار أمان بسيط: نتأكد أن الرسالة من script.google.com
+  if (event.origin && !event.origin.includes('script.google.com')) return;
+
+  const h = Number(event.data.height);
+  if (!isNaN(h) && h > 0) {
+    setFrameHeight(h);
+  }
+});
+
+if (!nid || !phone) {
+  errorEl.textContent = 'تم فتح الصفحة بدون بيانات تسجيل الدخول. الرجاء العودة وإدخال البيانات من جديد.';
+  if (loader) loader.style.display = 'none';
+} else {
+  infoEl.innerHTML =
+    'تم الدخول باستخدام رقم الهوية: <strong>' + nid +
+    '</strong> و آخر 4 أرقام من رقم الجوال: <strong>' + phone + '</strong>.';
+
+  const url = INNER_WEBAPP_URL +
+    '?national_id=' + encodeURIComponent(nid) +
+    '&phone='       + encodeURIComponent(phone);
+
+  frame.src = url;
+
+  frame.onload = function() {
+    // في حال لم ترسل صفحة Apps Script أي ارتفاع، نستخدم ارتفاع افتراضي
+    if (!frame.style.height) {
+      setFrameHeight(360);
+    }
+    if (loader) loader.style.display = 'none';
+    frame.style.display = 'block';
+  };
+}
+
+  </script>
+</body>
+</html>

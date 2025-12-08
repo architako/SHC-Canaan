@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta charset="UTF-8" />
+  <title>تفاصيل الفعالية - مخيم الهلال الجنوبي</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- خط Cairo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0b5a84;
+      --primary-light: #e6f2f8;
+      --text: #222;
+      --muted: #777;
+      --bg: #f5f5f5;
+      --card-bg: #ffffff;
+    }
+    * { box-sizing: border-box; }
+   body {
+  margin: 0;
+  font-family: "Cairo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  direction: rtl;
+}
+
+    a { color: inherit; text-decoration: none; }
+
+    header.site-header {
+      background-color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-bottom: 1px solid #eee;
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-logo img {
+      height: 80px;
+      width: auto;
+      object-fit: contain;
+    }
+    .header-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    nav.main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px 16px;
+    }
+    nav.main-nav a {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      background-color: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+    nav.main-nav a:hover {
+      background-color: var(--primary-light);
+    }
+    nav.main-nav a.active {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 20px auto 40px;
+      padding: 0 16px;
+    }
+
+    .status-message {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 20px 0;
+    }
+
+    .event-detail-card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .event-detail-image {
+      width: 100%;
+      max-height: 280px;
+      background-color: var(--primary-light);
+      overflow: hidden;
+    }
+    .event-detail-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .event-detail-body {
+      padding: 14px 16px 18px;
+    }
+    .event-detail-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+    .event-detail-meta {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .event-detail-desc {
+      font-size: 0.98rem;
+      line-height: 1.7;
+      white-space: pre-line;
+      margin-bottom: 14px;
+    }
+    .event-detail-actions {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .btn {
+      font-size: 0.9rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: none;
+      background-color: var(--primary);
+      color: #fff;
+      cursor: pointer;
+    }
+    .btn.secondary {
+      background-color: #ccc;
+      color: #222;
+    }
+    footer.site-footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #ffffff;
+      background-color: var(--primary);
+      padding: 8px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-top">
+      <div class="header-logo">
+        <img src="LOGO.png" alt="شعار مخيم الهلال الجنوبي" />
+        <div class="header-title">مخيم الهلال الجنوبي</div>
+      </div>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html">الصفحة الرئيسية</a>
+      <a href="events.html" class="active">آخر الفعاليات</a>
+      <a href="admins.html">أعضاء الإدارة</a>
+      <a href="services.html">الخدمات الإلكترونية</a>
+      <a href="gallery.html">ألبوم الصور</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="event-status" class="status-message">جاري تحميل تفاصيل الفعالية...</div>
+    <div id="event-detail" style="display:none;"></div>
+  </main>
+
+  <footer class="site-footer">
+    جميع الحقوق محفوظة &copy; مخيم الهلال الجنوبي
+  </footer>
+
+  <script>
+    // نفس رابط CSV لورقة "آخر الفعاليات"
+    const EVENTS_CSV_URL =
+      'https://docs.google.com/spreadsheets/d/e/2PACX-1vTv_Ow-CBTJPbYNSVivDuG_MPM9w-Ov6xwVdLux0-FE7eX_y8RCVpF32bLNsSTZwb5jlMTfa9lmSXIP/pub?gid=1913784890&single=true&output=csv';
+
+    function getQueryParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/);
+      return lines.map(line => line.split(',').map(cell => cell.trim()));
+    }
+
+    function getHeaderIndex(headers, name) {
+      return headers.indexOf(name);
+    }
+
+    function getArabicDayName(dateObj) {
+      const days = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+      return days[dateObj.getDay()];
+    }
+
+    function renderEventDetail(rows, targetId) {
+      const statusEl = document.getElementById('event-status');
+      const detailEl = document.getElementById('event-detail');
+
+      if (!rows || rows.length <= 1) {
+        statusEl.textContent = 'لا توجد بيانات متاحة.';
+        return;
+      }
+
+      const header = rows[0];
+
+      const idxId      = getHeaderIndex(header, 'id');
+      const idxDate    = getHeaderIndex(header, 'التاريخ');
+      const idxTitle   = getHeaderIndex(header, 'العنوان');
+      const idxDesc    = getHeaderIndex(header, 'الوصف');
+      const idxPlace   = getHeaderIndex(header, 'المكان');
+      const idxImage   = getHeaderIndex(header, 'صورة (رابط مباشر)');
+      const idxAlbum   = getHeaderIndex(header, 'رابط ألبوم الصور');
+
+      if (idxId === -1 || idxTitle === -1) {
+        statusEl.textContent = 'لم يتم العثور على العناوين المتوقعة في الشيت.';
+        console.log('HEADER ROW:', header);
+        return;
+      }
+
+      let found = null;
+
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        if (!row || row.length === 0) continue;
+        const rowId = idxId >= 0 ? (row[idxId] || '') : '';
+        if (String(rowId).trim() === String(targetId).trim()) {
+          found = row;
+          break;
+        }
+      }
+
+      if (!found) {
+        statusEl.textContent = 'لم يتم العثور على هذه الفعالية. تأكد من الرابط أو حاول مرة أخرى.';
+        return;
+      }
+
+      const evt = {
+        id:     found[idxId]    || '',
+        date:   idxDate  >= 0 ? found[idxDate]  : '',
+        title:  idxTitle >= 0 ? found[idxTitle] : '',
+        desc:   idxDesc  >= 0 ? found[idxDesc]  : '',
+        place:  idxPlace >= 0 ? found[idxPlace] : '',
+        image:  idxImage >= 0 ? found[idxImage] : '',
+        album:  idxAlbum >= 0 ? found[idxAlbum] : ''
+      };
+
+      let dateLine = '';
+      if (evt.date) {
+        const d = new Date(evt.date);
+        if (!isNaN(d.getTime())) {
+          const dayName = getArabicDayName(d);
+          dateLine = `${dayName} - ${d.toLocaleDateString('ar-EG')}`;
+        } else {
+          dateLine = evt.date;
+        }
+      }
+
+      const card = document.createElement('article');
+      card.className = 'event-detail-card';
+
+      if (evt.image && evt.image.startsWith('http')) {
+        const imgDiv = document.createElement('div');
+        imgDiv.className = 'event-detail-image';
+        const img = document.createElement('img');
+        img.src = evt.image;
+        img.alt = evt.title || 'صورة الفعالية';
+        imgDiv.appendChild(img);
+        card.appendChild(imgDiv);
+      }
+
+      const body = document.createElement('div');
+      body.className = 'event-detail-body';
+
+      const titleEl = document.createElement('h1');
+      titleEl.className = 'event-detail-title';
+      titleEl.textContent = evt.title || '';
+      body.appendChild(titleEl);
+
+      if (dateLine || evt.place) {
+        const metaEl = document.createElement('div');
+        metaEl.className = 'event-detail-meta';
+        let metaText = '';
+        if (dateLine) metaText += dateLine;
+        if (evt.place) {
+          if (metaText) metaText += ' | ';
+          metaText += 'المكان: ' + evt.place;
+        }
+        metaEl.textContent = metaText;
+        body.appendChild(metaEl);
+      }
+
+      if (evt.desc) {
+        const descEl = document.createElement('div');
+        descEl.className = 'event-detail-desc';
+        descEl.textContent = evt.desc;
+        body.appendChild(descEl);
+      }
+
+      const actions = document.createElement('div');
+      actions.className = 'event-detail-actions';
+
+      if (evt.album && evt.album.startsWith('http')) {
+        const albumBtn = document.createElement('button');
+        albumBtn.className = 'btn';
+        albumBtn.textContent = 'عرض ألبوم الصور لهذه الفعالية';
+        albumBtn.addEventListener('click', () => {
+          window.open(evt.album, '_blank', 'noopener');
+        });
+        actions.appendChild(albumBtn);
+      }
+
+      const backBtn = document.createElement('button');
+      backBtn.className = 'btn secondary';
+      backBtn.textContent = 'العودة إلى قائمة الفعاليات';
+      backBtn.addEventListener('click', () => {
+        window.location.href = 'events.html';
+      });
+      actions.appendChild(backBtn);
+
+      body.appendChild(actions);
+      card.appendChild(body);
+
+      detailEl.innerHTML = '';
+      detailEl.appendChild(card);
+
+      statusEl.style.display = 'none';
+      detailEl.style.display = 'block';
+    }
+
+    async function loadEventDetail() {
+      const statusEl = document.getElementById('event-status');
+      const id = getQueryParam('id');
+
+      if (!id) {
+        statusEl.textContent = 'لا يوجد معرّف فعالية في الرابط.';
+        return;
+      }
+
+      if (!EVENTS_CSV_URL) {
+        statusEl.textContent =
+          'يرجى ضبط رابط CSV الخاص بورقة "آخر الفعاليات" داخل الكود.';
+        return;
+      }
+
+      try {
+        const res = await fetch(EVENTS_CSV_URL);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const text = await res.text();
+        const rows = parseCSV(text);
+        renderEventDetail(rows, id);
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'حدث خطأ أثناء تحميل تفاصيل الفعالية.';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadEventDetail);
+  </script>
+</body>
+</html>

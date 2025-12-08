@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta charset="UTF-8" />
+  <title>الصفحة الرئيسية - مخيم الهلال الجنوبي</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- خط Cairo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0b5a84;
+      --primary-light: #e6f2f8;
+      --text: #222;
+      --muted: #777;
+      --bg: #f5f5f5;
+      --card-bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Cairo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  direction: rtl;
+}
+
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ===== الهيدر + المنيو ===== */
+
+    header.site-header {
+      background-color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo img {
+      height: 80px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .header-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    nav.main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px 16px;
+    }
+
+    nav.main-nav a {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      background-color: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    nav.main-nav a:hover {
+      background-color: var(--primary-light);
+    }
+
+    nav.main-nav a.active {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* ===== محتوى الصفحة ===== */
+
+    main {
+      max-width: 1100px;
+      margin: 20px auto 40px;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ===== قسم الشعار داخل المربع ===== */
+
+    .hero {
+      background: linear-gradient(to left, #ffffff, #eaf4fa);
+      border-radius: 18px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 180px 1fr; /* الشعار يمين – النص يسار */
+      align-items: center;
+      gap: 25px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .hero-logo {
+      text-align: center;
+    }
+
+    .hero-logo img {
+      width: 150px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .hero-text h1 {
+      margin: 0 0 8px;
+      font-size: 1.8rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .hero-text p {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    .btn:hover {
+      opacity: 0.95;
+    }
+
+    /* ===== خدمات سريعة ===== */
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .section-header span {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .quick-services {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .service-card {
+      background-color: var(--card-bg);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: 0.1s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+    }
+
+    .service-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin: 0;
+    }
+
+    .service-desc {
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+
+    .service-tag {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ===== كروت ألبوم + فعاليات ===== */
+
+    .grid-two {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .status-message {
+      text-align: center;
+      color: var(--muted);
+      padding: 10px 0;
+    }
+
+    .preview-body {
+      display: flex;
+      gap: 10px;
+    }
+
+    .preview-thumb {
+      width: 120px;
+      height: 90px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--primary-light);
+      flex-shrink: 0;
+    }
+
+    .preview-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .preview-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .preview-desc {
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+
+    .preview-actions {
+      margin-top: 6px;
+      display: flex;
+      gap: 6px;
+    }
+
+    /* ===== عرض كامل لأعضاء الإدارة ===== */
+
+    .admins-preview-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .admin-mini-card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 180px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+    }
+
+    .admin-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .admin-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .admin-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .admin-role {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    footer.site-footer {
+      text-align: center;
+      padding: 10px;
+      background: var(--primary);
+      color: white;
+      margin-top: 20px;
+    }
+
+@media (max-width: 700px) {
+  /* قسم الترحيب يصبح عمود واحد في الجوال */
+  .hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  /* أحدث فعالية + أحدث ألبوم: تصبح عمود واحد بدل عمودين */
+  .grid-two {
+    grid-template-columns: 1fr;
+  }
+
+  /* داخل كل كرت (الصورة فوق والنص تحت) */
+  .preview-body {
+    flex-direction: column;
+  }
+
+  .preview-thumb {
+    width: 100%;
+    height: 180px; /* تقدر تغيّرها حسب ما يعجبك */
+  }
+}
+
+    .links-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.link-pill {
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.link-pill:hover {
+  background-color: var(--primary-light);
+  border-color: var(--primary);
+}
+
+.link-pill span {
+  color: var(--primary);
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- الهيدر -->
+  <header class="site-header">
+    <div class="header-top">
+      <div class="header-logo">
+        <img src="LOGO.png" alt="شعار مخيم الهلال الجنوبي">
+        <div class="header-title">مخيم الهلال الجنوبي</div>
+      </div>
+    </div>
+
+    <nav class="main-nav">
+      <a href="index.html" class="active">الصفحة الرئيسية</a>
+      <a href="events.html">آخر الفعاليات</a>
+      <a href="admins.html">أعضاء الإدارة</a>
+      <a href="services.html">الخدمات الإلكترونية</a>
+      <a href="gallery.html">ألبوم الصور</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- الشعار داخل مربع مرحبا بكم -->
+    <section class="hero">
+
+      <div class="hero-logo">
+        <img src="LOGO.png" alt="شعار مخيم الهلال الجنوبي">
+      </div>
+
+      <div class="hero-text">
+        <h1>مرحبًا بكم في مخيم الهلال الجنوبي</h1>
+        <p>
+          منصة رقمية لخدمة أهالي مخيم الهلال الجنوبي، لمتابعة آخر الفعاليات،
+          والوصول إلى الخدمات الإلكترونية، واستعراض صور الأنشطة والبرامج المختلفة.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="window.location.href='services.html'">
+            الدخول إلى الخدمات الإلكترونية
+          </button>
+
+          <button class="btn btn-outline" onclick="window.location.href='events.html'">
+            عرض جميع الفعاليات
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- خدمات سريعة -->
+    <section>
+      <div class="section-header">
+        <h2>الخدمات السريعة</h2>
+        <span>أهم الصفحات التي يحتاجها الأهالي</span>
+      </div>
+
+      <div class="quick-services">
+        <article class="service-card" onclick="window.location.href='services.html'">
+          <div class="service-tag">خدمات إلكترونية</div>
+          <h3 class="service-title">بوابة الخدمات الإلكترونية</h3>
+          <p class="service-desc">الدخول، تحديث البيانات، والوصول إلى الخدمات.</p>
+        </article>
+
+        <article class="service-card" onclick="window.location.href='events.html'">
+          <div class="service-tag">فعاليات</div>
+          <h3 class="service-title">آخر الفعاليات</h3>
+          <p class="service-desc">تابع نشاطات وإعلانات إدارة المخيم.</p>
+        </article>
+
+        <article class="service-card" onclick="window.location.href='gallery.html'">
+          <div class="service-tag">صور</div>
+          <h3 class="service-title">ألبوم الصور</h3>
+          <p class="service-desc">استعرض صور فعاليات وأنشطة المخيم.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- أحدث فعالية + ألبوم -->
+    <section class="grid-two">
+      <section class="card">
+        <h2>أحدث فعالية</h2>
+        <div id="latest-event-status" class="status-message">جاري التحميل...</div>
+        <div id="latest-event"></div>
+      </section>
+
+      <section class="card">
+        <h2>أحدث ألبوم صور</h2>
+        <div id="latest-album-status" class="status-message">جاري التحميل...</div>
+        <div id="latest-album"></div>
+      </section>
+    </section>
+
+    <!-- جميع أعضاء الإدارة -->
+    <section class="card">
+      <h2>إدارة المخيم</h2>
+      <div id="admins-status" class="status-message">جاري تحميل إدارة المخيم...</div>
+      <div id="admins-preview" class="admins-preview-list"></div>
+    </section>
+<!-- روابط مهمة لأهالي المخيم -->
+<section class="card">
+  <div class="section-header" style="margin-bottom: 8px;">
+    <h2>روابط مهمة لأهالي المخيم</h2>
+    <span>روابط رسمية وتهم كافة السكان</span>
+  </div>
+
+  <div class="links-list">
+    <div class="link-pill" onclick="window.open('https://chat.whatsapp.com/BfQOvIDoivYCkicUiVSv8F','_blank')">
+      <span>قروب الواتساب الرسمي للمخيم</span>
+    </div>
+
+    <div class="link-pill" onclick="window.open('https://www.facebook.com/SHC.Canaan','_blank')">
+      <span>صفحة الفيسبوك الرسمية للمخيم</span>
+    </div>
+
+    <div class="link-pill" onclick="window.open('https://t.me/somechannel','_blank')">
+      <span>قناة التليجرام – إن وجدت</span>
+    </div>
+
+    <div class="link-pill" onclick="window.open('services.html','_blank')">
+      <span>بوابة الخدمات الإلكترونية</span>
+    </div>
+  </div>
+</section>
+
+  </main>
+
+  <footer class="site-footer">
+    جميع الحقوق محفوظة © مخيم الهلال الجنوبي
+  </footer>
+
+  <script>
+    const EVENTS_CSV_URL =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vTv_Ow-CBTJPbYNSVivDuG_MPM9w-Ov6xwVdLux0-FE7eX_y8RCVpF32bLNsSTZwb5jlMTfa9lmSXIP/pub?gid=1913784890&single=true&output=csv";
+
+    const GALLERY_CSV_URL =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vTv_Ow-CBTJPbYNSVivDuG_MPM9w-Ov6xwVdLux0-FE7eX_y8RCVpF32bLNsSTZwb5jlMTfa9lmSXIP/pub?gid=1085535145&single=true&output=csv";
+
+    const ADMINS_CSV_URL =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vTv_Ow-CBTJPbYNSVivDuG_MPM9w-Ov6xwVdLux0-FE7eX_y8RCVpF32bLNsSTZwb5jlMTfa9lmSXIP/pub?gid=1715700236&single=true&output=csv";
+
+    function parseCSV(text) {
+      return text.trim().split(/\r?\n/).map(row => row.split(','));
+    }
+
+    function getIndex(headers, name) {
+      return headers.indexOf(name);
+    }
+
+    /* ===== تحميل أعضاء الإدارة ===== */
+
+    async function loadAdmins() {
+      const status = document.getElementById("admins-status");
+      const container = document.getElementById("admins-preview");
+
+      try {
+        const res = await fetch(ADMINS_CSV_URL);
+        const text = await res.text();
+        const rows = parseCSV(text);
+
+        const header = rows[0];
+
+        const idxName = getIndex(header, "الاسم");
+        const idxRole = getIndex(header, "المسمى الوظيفي");
+        const idxImage = getIndex(header, "صورة (رابط مباشر)");
+        const idxActive = getIndex(header, "مفعّل؟");
+        const idxOrder = getIndex(header, "ترتيب");
+
+        let admins = rows.slice(1).filter(r => r[idxActive] == "1");
+
+        admins.sort((a,b)=> Number(a[idxOrder]) - Number(b[idxOrder]));
+admins.forEach(a => {
+  const card = document.createElement("div");
+  card.className = "admin-mini-card";
+
+  const info = document.createElement("div");
+  info.innerHTML = `
+    <div class="admin-name">${a[idxName]}</div>
+    <div class="admin-role">${a[idxRole]}</div>
+  `;
+
+  // التحقق من رابط الصورة
+  const rawImage = a[idxImage] || "";
+  const imageUrl = rawImage.trim();
+
+  if (imageUrl && imageUrl.startsWith("http")) {
+    const avatar = document.createElement("div");
+    avatar.className = "admin-avatar";
+    avatar.innerHTML = `<img src="${imageUrl}" alt="${a[idxName]}">`;
+    card.appendChild(avatar);
+  }
+
+  card.appendChild(info);
+  container.appendChild(card);
+});
+
+
+        status.style.display = "none";
+      } catch (e) {
+        status.textContent = "حدث خطأ أثناء تحميل الإدارة.";
+      }
+    }
+
+    /* ===== تحميل ألبوم الصور والفعاليات ===== */
+
+    async function loadLatestEvent() {
+      const box = document.getElementById("latest-event");
+      const status = document.getElementById("latest-event-status");
+
+      try {
+        const res = await fetch(EVENTS_CSV_URL);
+        const text = await res.text();
+        const rows = parseCSV(text);
+
+        const header = rows[0];
+        const idxTitle = getIndex(header, "العنوان");
+        const idxDate = getIndex(header, "التاريخ");
+        const idxDesc = getIndex(header, "الوصف");
+        const idxImage = getIndex(header, "صورة (رابط مباشر)");
+        const idxId = getIndex(header, "id");
+        const idxActive = getIndex(header, "مفعّل؟");
+        const idxOrder = getIndex(header, "ترتيب");
+
+        let items = rows.slice(1).filter(r => r[idxActive] == "1");
+        items.sort((a,b)=> Number(a[idxOrder]) - Number(b[idxOrder]));
+        let ev = items[0];
+
+        box.innerHTML = `
+          <div class="preview-body">
+            <div class="preview-thumb"><img src="${ev[idxImage]}"></div>
+            <div>
+              <div class="preview-title">${ev[idxTitle]}</div>
+              <div class="preview-meta">${ev[idxDate]}</div>
+              <div class="preview-desc">${ev[idxDesc].slice(0,120)}...</div>
+              <div class="preview-actions">
+                <button class="btn btn-primary" onclick="location.href='event.html?id=${ev[idxId]}'">عرض التفاصيل</button>
+                <button class="btn btn-outline" onclick="location.href='events.html'">عرض الكل</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        status.style.display = "none";
+      } catch (e) {
+        status.textContent = "خطأ أثناء تحميل الفعالية.";
+      }
+    }
+
+    async function loadLatestAlbum() {
+      const box = document.getElementById("latest-album");
+      const status = document.getElementById("latest-album-status");
+
+      try {
+        const res = await fetch(GALLERY_CSV_URL);
+        const text = await res.text();
+        const rows = parseCSV(text);
+
+        const header = rows[0];
+        const idxTitle = getIndex(header, "العنوان");
+        const idxDate = getIndex(header, "التاريخ");
+        const idxDesc = getIndex(header, "الوصف");
+        const idxImage = getIndex(header, "صورة (رابط مباشر)");
+        const idxLink = getIndex(header, "رابط الألبوم");
+        const idxActive = getIndex(header, "مفعّل؟");
+        const idxOrder = getIndex(header, "ترتيب");
+
+        let items = rows.slice(1).filter(r => r[idxActive] == "1");
+        items.sort((a,b)=> Number(a[idxOrder]) - Number(b[idxOrder]));
+        let alb = items[0];
+
+        box.innerHTML = `
+          <div class="preview-body">
+            <div class="preview-thumb"><img src="${alb[idxImage]}"></div>
+            <div>
+              <div class="preview-title">${alb[idxTitle]}</div>
+              <div class="preview-meta">${alb[idxDate]}</div>
+              <div class="preview-desc">${alb[idxDesc].slice(0,120)}...</div>
+              <div class="preview-actions">
+                <button class="btn btn-primary" onclick="window.open('${alb[idxLink]}')">فتح الألبوم</button>
+                <button class="btn btn-outline" onclick="location.href='gallery.html'">عرض الكل</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        status.style.display = "none";
+      } catch (e) {
+        status.textContent = "خطأ أثناء تحميل الألبوم.";
+      }
+    }
+
+    loadAdmins();
+    loadLatestEvent();
+    loadLatestAlbum();
+  </script>
+
+</body>
+</html>

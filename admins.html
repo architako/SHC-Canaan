@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<link rel="icon" type="image/png" href="favicon.png">
+
+  <meta charset="UTF-8" />
+  <title>أعضاء الإدارة - مخيم الهلال الجنوبي</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- خط Cairo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0b5a84;
+      --primary-light: #e6f2f8;
+      --text: #222;
+      --muted: #777;
+      --bg: #f5f5f5;
+      --card-bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+  margin: 0;
+  font-family: "Cairo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  direction: rtl;
+}
+
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ====== الهيدر + الشعار + المنيو ====== */
+
+    header.site-header {
+      background-color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo img {
+      height: 80px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .header-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    nav.main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px 16px;
+    }
+
+    nav.main-nav a {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      background-color: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    nav.main-nav a:hover {
+      background-color: var(--primary-light);
+    }
+
+    nav.main-nav a.active {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* ====== محتوى الصفحة ====== */
+
+    main {
+      max-width: 1100px;
+      margin: 20px auto 40px;
+      padding: 0 16px;
+    }
+
+    .page-header {
+      margin-bottom: 16px;
+    }
+
+    .page-header h1 {
+      margin: 0 0 6px;
+      font-size: 1.4rem;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ====== شبكة أعضاء الإدارة ====== */
+
+    .admins-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .admin-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .admin-card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+      flex: 1 1 220px;
+      min-width: 220px;
+      max-width: 280px;
+    }
+
+    .admin-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      background-color: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .admin-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .admin-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .admin-name {
+      font-weight: 600;
+      font-size: 0.98rem;
+    }
+
+    .admin-role {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .admin-contacts {
+      margin-top: 4px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .admin-contacts div {
+      margin-bottom: 2px;
+    }
+
+    .admin-contacts a {
+      color: var(--primary);
+      text-decoration: underline;
+      font-size: 0.85rem;
+    }
+
+    .status-message {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 20px 0;
+    }
+
+    footer.site-footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #ffffff;
+      background-color: var(--primary);
+      padding: 8px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .header-top {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      nav.main-nav {
+        padding-top: 4px;
+        padding-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ====== الهيدر المشترك لكل الصفحات ====== -->
+  <header class="site-header">
+    <div class="header-top">
+      <div class="header-logo">
+        <!-- استخدم اسم ملف الشعار الموجود في الريبو -->
+        <img src="LOGO.png" alt="شعار مخيم الهلال الجنوبي" />
+        <div class="header-title">مخيم الهلال الجنوبي</div>
+      </div>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html">الصفحة الرئيسية</a>
+      <a href="events.html">آخر الفعاليات</a>
+      <a href="admins.html" class="active">أعضاء الإدارة</a>
+      <a href="services.html">الخدمات الإلكترونية</a>
+      <a href="gallery.html">ألبوم الصور</a>
+    </nav>
+  </header>
+
+  <!-- ====== محتوى صفحة أعضاء الإدارة ====== -->
+  <main>
+    <section class="page-header">
+      <h1>أعضاء لجنة الإدارة</h1>
+    </section>
+
+    <section id="admins-section">
+      <div id="admins-status" class="status-message">جاري تحميل بيانات أعضاء الإدارة...</div>
+      <div id="admins-container" class="admins-wrapper" style="display:none;"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    جميع الحقوق محفوظة &copy; مخيم الهلال الجنوبي
+  </footer>
+
+  <script>
+    // 👇 ضع هنا رابط CSV الخاص بورقة "أعضاء الإدارة"
+    // مثال: https://docs.google.com/spreadsheets/d/XXXX/pub?gid=YYYY&single=true&output=csv
+    const ADMINS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTv_Ow-CBTJPbYNSVivDuG_MPM9w-Ov6xwVdLux0-FE7eX_y8RCVpF32bLNsSTZwb5jlMTfa9lmSXIP/pub?gid=1715700236&single=true&output=csv';
+
+    // دالة بسيطة لتقسيم CSV إلى مصفوفة صفوف/أعمدة
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/);
+      return lines.map(line => {
+        // تقسيم بسيط جدًا على الفاصلة (يفترض عدم وجود فواصل داخل القيم)
+        return line.split(',').map(cell => cell.trim());
+      });
+    }
+
+    function getHeaderIndex(headers, name) {
+      return headers.indexOf(name);
+    }
+
+    function buildAdminsView(rows) {
+      const statusEl = document.getElementById('admins-status');
+      const container = document.getElementById('admins-container');
+
+      if (!rows || rows.length <= 1) {
+        statusEl.textContent = 'لا توجد بيانات متاحة لأعضاء الإدارة.';
+        return;
+      }
+
+      const header = rows[0];
+
+      const idxId      = getHeaderIndex(header, 'id');
+      const idxName    = getHeaderIndex(header, 'الاسم');
+      const idxRole    = getHeaderIndex(header, 'المنصب');
+      const idxPhone   = getHeaderIndex(header, 'الهاتف');
+      const idxWa      = getHeaderIndex(header, 'الواتساب');
+      const idxImage   = getHeaderIndex(header, 'صورة (رابط مباشر)');
+      const idxActive  = getHeaderIndex(header, 'مفعّل؟');
+      const idxOrder   = getHeaderIndex(header, 'ترتيب');
+
+      if (idxName === -1 || idxRole === -1 || idxOrder === -1) {
+        statusEl.textContent = 'لم يتم العثور على العناوين المتوقعة في الشيت.';
+        return;
+      }
+
+      // تجميع الأعضاء حسب "ترتيب"
+      const groups = {}; // key: order value, value: list of admins
+
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        if (!row || row.length === 0) continue;
+
+        const activeVal = idxActive >= 0 ? (row[idxActive] || '') : '';
+        // تخطي من ليسوا مفعّلين
+        if (!String(activeVal).trim()) continue;
+
+        const orderVal = idxOrder >= 0 ? (row[idxOrder] || '') : '';
+        if (!String(orderVal).trim()) continue;
+
+        const admin = {
+          id:      idxId     >= 0 ? row[idxId]     : '',
+          name:    idxName   >= 0 ? row[idxName]   : '',
+          role:    idxRole   >= 0 ? row[idxRole]   : '',
+          phone:   idxPhone  >= 0 ? row[idxPhone]  : '',
+          wa:      idxWa     >= 0 ? row[idxWa]     : '',
+          image:   idxImage  >= 0 ? row[idxImage]  : '',
+          order:   orderVal
+        };
+
+        if (!groups[orderVal]) {
+          groups[orderVal] = [];
+        }
+        groups[orderVal].push(admin);
+      }
+
+      const orderKeys = Object.keys(groups);
+      if (orderKeys.length === 0) {
+        statusEl.textContent = 'لا توجد أعضاء مفعّلين للعرض حالياً.';
+        return;
+      }
+
+      // ترتيب المجموعات حسب الرقم
+      orderKeys.sort((a, b) => {
+        const na = Number(a);
+        const nb = Number(b);
+        if (!isNaN(na) && !isNaN(nb)) return na - nb;
+        return String(a).localeCompare(String(b), 'ar');
+      });
+
+      container.innerHTML = '';
+
+      orderKeys.forEach(orderVal => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'admin-row';
+
+        groups[orderVal].forEach(admin => {
+          const card = document.createElement('article');
+          card.className = 'admin-card';
+
+          // الصورة / الحرف الأول
+          const avatar = document.createElement('div');
+          avatar.className = 'admin-avatar';
+
+          if (admin.image && admin.image.startsWith('http')) {
+            const img = document.createElement('img');
+            img.src = admin.image;
+            img.alt = admin.name || 'عضو الإدارة';
+            avatar.appendChild(img);
+          } else {
+            const initial = (admin.name || '?').trim().charAt(0);
+            avatar.textContent = initial || '?';
+          }
+
+          const info = document.createElement('div');
+          info.className = 'admin-info';
+
+          const nameEl = document.createElement('div');
+          nameEl.className = 'admin-name';
+          nameEl.textContent = admin.name || '';
+
+          const roleEl = document.createElement('div');
+          roleEl.className = 'admin-role';
+          roleEl.textContent = admin.role || '';
+
+          info.appendChild(nameEl);
+          info.appendChild(roleEl);
+
+          const contacts = document.createElement('div');
+          contacts.className = 'admin-contacts';
+
+          if (admin.phone) {
+            const divPhone = document.createElement('div');
+            divPhone.textContent = 'الهاتف: ' + admin.phone;
+            contacts.appendChild(divPhone);
+          }
+
+          if (admin.wa) {
+            const divWa = document.createElement('div');
+            const waLink = document.createElement('a');
+
+            // لو القيمة تشبه رابط https نستخدمها كما هي
+            // لو هي رقم فقط نحولها لرابط واتساب
+            if (admin.wa.startsWith('http')) {
+              waLink.href = admin.wa;
+            } else {
+              const digits = admin.wa.replace(/\D+/g, '');
+              waLink.href = 'https://wa.me/' + digits;
+            }
+
+            waLink.target = '_blank';
+            waLink.rel = 'noopener';
+            waLink.textContent = 'التواصل عبر واتساب';
+            divWa.appendChild(waLink);
+            contacts.appendChild(divWa);
+          }
+
+          if (contacts.children.length > 0) {
+            info.appendChild(contacts);
+          }
+
+          card.appendChild(avatar);
+          card.appendChild(info);
+
+          rowDiv.appendChild(card);
+        });
+
+        container.appendChild(rowDiv);
+      });
+
+      statusEl.style.display = 'none';
+      container.style.display = 'flex';
+    }
+
+    async function loadAdmins() {
+      const statusEl = document.getElementById('admins-status');
+
+      if (!ADMINS_CSV_URL || ADMINS_CSV_URL === 'PUT_YOUR_ADMINS_SHEET_CSV_URL_HERE') {
+        statusEl.textContent = 'يرجى ضبط رابط CSV الخاص بورقة "أعضاء الإدارة" داخل الكود.';
+        return;
+      }
+
+      try {
+        const res = await fetch(ADMINS_CSV_URL);
+        if (!res.ok) {
+          throw new Error('HTTP ' + res.status);
+        }
+        const text = await res.text();
+        const rows = parseCSV(text);
+        buildAdminsView(rows);
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'حدث خطأ أثناء تحميل بيانات أعضاء الإدارة. تأكد من رابط الشيت ثم حاول مرة أخرى.';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadAdmins);
+  </script>
+</body>
+</html>
+
+
+

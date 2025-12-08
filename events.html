@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta charset="UTF-8" />
+  <title>آخر الفعاليات - مخيم الهلال الجنوبي</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- خط Cairo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0b5a84;
+      --primary-light: #e6f2f8;
+      --text: #222;
+      --muted: #777;
+      --bg: #f5f5f5;
+      --card-bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+  margin: 0;
+  font-family: "Cairo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  direction: rtl;
+}
+
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ====== الهيدر + المنيو ====== */
+
+    header.site-header {
+      background-color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo img {
+      height: 80px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .header-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    nav.main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px 16px;
+    }
+
+    nav.main-nav a {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      background-color: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    nav.main-nav a:hover {
+      background-color: var(--primary-light);
+    }
+
+    nav.main-nav a.active {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* ====== محتوى الصفحة ====== */
+
+    main {
+      max-width: 1100px;
+      margin: 20px auto 40px;
+      padding: 0 16px;
+    }
+
+    .page-header {
+      margin-bottom: 20px;
+    }
+
+    .page-header h1 {
+      margin: 0 0 6px;
+      font-size: 1.4rem;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ====== كروت الفعاليات ====== */
+
+    .events-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .event-card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      padding: 8px;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .event-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    }
+
+    .event-thumb {
+      width: 110px;
+      height: 80px;
+      background-color: var(--primary-light);
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .event-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .event-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .event-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .event-meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .event-desc {
+      font-size: 0.9rem;
+      color: var(--text);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .status-message {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 20px 0;
+    }
+
+    footer.site-footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #ffffff;
+      background-color: var(--primary);
+      padding: 8px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .header-top {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      nav.main-nav {
+        padding-top: 4px;
+        padding-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-top">
+      <div class="header-logo">
+        <img src="LOGO.png" alt="شعار مخيم الهلال الجنوبي" />
+        <div class="header-title">مخيم الهلال الجنوبي</div>
+      </div>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html">الصفحة الرئيسية</a>
+      <a href="events.html" class="active">آخر الفعاليات</a>
+      <a href="admins.html">أعضاء الإدارة</a>
+      <a href="services.html">الخدمات الإلكترونية</a>
+      <a href="gallery.html">ألبوم الصور</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-header">
+      <h1>آخر الفعاليات</h1>
+    </section>
+
+    <section id="events-section">
+      <div id="events-status" class="status-message">جاري تحميل بيانات الفعاليات...</div>
+      <div id="events-container" class="events-list" style="display:none;"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    جميع الحقوق محفوظة &copy; مخيم الهلال الجنوبي
+  </footer>
+
+  <script>
+    // رابط CSV الصحيح لورقة "آخر الفعاليات"
+    const EVENTS_CSV_URL =
+      'https://docs.google.com/spreadsheets/d/e/2PACX-1vTv_Ow-CBTJPbYNSVivDuG_MPM9w-Ov6xwVdLux0-FE7eX_y8RCVpF32bLNsSTZwb5jlMTfa9lmSXIP/pub?gid=1913784890&single=true&output=csv';
+
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/);
+      return lines.map(line => line.split(',').map(cell => cell.trim()));
+    }
+
+    function getHeaderIndex(headers, name) {
+      return headers.indexOf(name);
+    }
+
+    function getArabicDayName(dateObj) {
+      const days = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+      return days[dateObj.getDay()];
+    }
+
+    function buildEventsView(rows) {
+      const statusEl = document.getElementById('events-status');
+      const container = document.getElementById('events-container');
+
+      if (!rows || rows.length <= 1) {
+        statusEl.textContent = 'لا توجد فعاليات مفعّلة حالياً.';
+        return;
+      }
+
+      const header = rows[0];
+
+      const idxId      = getHeaderIndex(header, 'id');
+      const idxDate    = getHeaderIndex(header, 'التاريخ');
+      const idxTitle   = getHeaderIndex(header, 'العنوان');
+      const idxDesc    = getHeaderIndex(header, 'الوصف');
+      const idxPlace   = getHeaderIndex(header, 'المكان');
+      const idxImage   = getHeaderIndex(header, 'صورة (رابط مباشر)');
+      const idxAlbum   = getHeaderIndex(header, 'رابط ألبوم الصور');
+      const idxActive  = getHeaderIndex(header, 'مفعّل؟');
+      const idxOrder   = getHeaderIndex(header, 'ترتيب');
+
+      if (idxTitle === -1 || idxOrder === -1) {
+        statusEl.textContent = 'لم يتم العثور على العناوين المتوقعة في الشيت.';
+        console.log('HEADER ROW:', header);
+        return;
+      }
+
+      const events = [];
+
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        if (!row || row.length === 0) continue;
+
+        const activeVal = idxActive >= 0 ? (row[idxActive] || '') : '';
+        if (!String(activeVal).trim()) continue;
+
+        const orderVal = idxOrder >= 0 ? (row[idxOrder] || '') : '';
+        if (!String(orderVal).trim()) continue;
+
+        const evt = {
+          id:     idxId    >= 0 ? row[idxId]    : '',
+          date:   idxDate  >= 0 ? row[idxDate]  : '',
+          title:  idxTitle >= 0 ? row[idxTitle] : '',
+          desc:   idxDesc  >= 0 ? row[idxDesc]  : '',
+          place:  idxPlace >= 0 ? row[idxPlace] : '',
+          image:  idxImage >= 0 ? row[idxImage] : '',
+          album:  idxAlbum >= 0 ? row[idxAlbum] : '',
+          order:  orderVal
+        };
+
+        events.push(evt);
+      }
+
+      if (events.length === 0) {
+        statusEl.textContent = 'لا توجد فعاليات مفعّلة حالياً.';
+        return;
+      }
+
+      // ترتيب حسب "ترتيب"
+      events.sort((a, b) => {
+        const na = Number(a.order);
+        const nb = Number(b.order);
+        if (!isNaN(na) && !isNaN(nb)) return nb - na;
+        return String(a.order).localeCompare(String(b.order), 'ar');
+      });
+
+      container.innerHTML = '';
+
+      events.forEach(evt => {
+        const card = document.createElement('article');
+        card.className = 'event-card';
+
+        // 👈 الآن نفتح في نفس الصفحة (ليس تبويب جديد)
+        if (evt.id) {
+          card.addEventListener('click', () => {
+            const url = 'event.html?id=' + encodeURIComponent(evt.id);
+            window.location.href = url;
+          });
+        }
+
+        // الصورة المصغرة
+        if (evt.image && evt.image.startsWith('http')) {
+          const thumb = document.createElement('div');
+          thumb.className = 'event-thumb';
+          const img = document.createElement('img');
+          img.src = evt.image;
+          img.alt = evt.title || 'صورة الفعالية';
+          thumb.appendChild(img);
+          card.appendChild(thumb);
+        }
+
+        const content = document.createElement('div');
+        content.className = 'event-content';
+
+        const titleEl = document.createElement('h3');
+        titleEl.className = 'event-title';
+        titleEl.textContent = evt.title || '';
+
+        // اليوم + التاريخ
+        let metaText = '';
+        if (evt.date) {
+          const d = new Date(evt.date);
+          if (!isNaN(d.getTime())) {
+            const dayName = getArabicDayName(d);
+            metaText = `${dayName} - ${d.toLocaleDateString('ar-EG')}`;
+          } else {
+            metaText = evt.date;
+          }
+        }
+
+        const metaEl = document.createElement('div');
+        metaEl.className = 'event-meta';
+        if (metaText) metaEl.textContent = metaText;
+
+        // جزء من الوصف فقط
+        const descEl = document.createElement('div');
+        descEl.className = 'event-desc';
+        const fullDesc = evt.desc || '';
+        const maxLen = 130;
+        descEl.textContent = fullDesc.length > maxLen
+          ? fullDesc.slice(0, maxLen) + '…'
+          : fullDesc;
+
+        content.appendChild(titleEl);
+        if (metaText) content.appendChild(metaEl);
+        if (fullDesc) content.appendChild(descEl);
+
+        card.appendChild(content);
+        container.appendChild(card);
+      });
+
+      statusEl.style.display = 'none';
+      container.style.display = 'flex';
+    }
+
+    async function loadEvents() {
+      const statusEl = document.getElementById('events-status');
+
+      if (!EVENTS_CSV_URL) {
+        statusEl.textContent =
+          'يرجى ضبط رابط CSV الخاص بورقة "آخر الفعاليات" داخل الكود.';
+        return;
+      }
+
+      try {
+        const res = await fetch(EVENTS_CSV_URL);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const text = await res.text();
+        const rows = parseCSV(text);
+        buildEventsView(rows);
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent =
+          'حدث خطأ أثناء تحميل بيانات الفعاليات. تأكد من رابط الشيت ثم حاول مرة أخرى.';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadEvents);
+  </script>
+</body>
+</html>
