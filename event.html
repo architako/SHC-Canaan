@@ -105,17 +105,21 @@
       overflow: hidden;
     }
     .event-detail-image {
-      width: 100%;
-      max-height: 280px;
-      background-color: var(--primary-light);
-      overflow: hidden;
-    }
-    .event-detail-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+  width: 100%;
+  background-color: var(--primary-light);
+  /* إزالة الحد الثابت والقص */
+  /* max-height: 280px; */
+  /* overflow: hidden; */
+}
+
+.event-detail-image img {
+  width: 100%;
+  height: auto;          /* خلي الارتفاع يتناسب مع أبعاد الصورة */
+  max-height: 70vh;      /* اختياري: لا تتعدى ارتفاع 70% من الشاشة */
+  object-fit: contain;   /* احتفظ بالصورة كاملة داخل الصندوق */
+  display: block;
+}
+
     .event-detail-body {
       padding: 14px 16px 18px;
     }
@@ -380,3 +384,4 @@
   </script>
 </body>
 </html>
+
