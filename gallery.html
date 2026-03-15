@@ -332,7 +332,7 @@
       albums.sort((a, b) => {
         const na = Number(a.order);
         const nb = Number(b.order);
-        if (!isNaN(na) && !isNaN(nb)) return na - nb;
+        if (!isNaN(na) && !isNaN(nb)) return nb - na;
         return String(a.order).localeCompare(String(b.order), 'ar');
       });
 
