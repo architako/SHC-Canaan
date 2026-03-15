@@ -612,7 +612,7 @@ admins.forEach(a => {
         const idxOrder = getIndex(header, "ترتيب");
 
         let items = rows.slice(1).filter(r => r[idxActive] == "1");
-        items.sort((a,b)=> Number(a[idxOrder]) - Number(b[idxOrder]));
+        items.sort((a,b)=> Number(b[idxOrder]) - Number(a[idxOrder]));
         let ev = items[0];
 
         box.innerHTML = `
