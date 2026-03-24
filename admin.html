@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة الإدارة - مخيم الهلال الجنوبي -كنعان-</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0b5a84;
+      --primary-light: #e6f2f8;
+      --accent: #b8dfaf;
+      --bg: #f5f5f5;
+      --card-bg: #ffffff;
+      --text: #222;
+      --muted: #777;
+      --danger: #b3261e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: "Cairo", system-ui, -apple-system, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      direction: rtl;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ===== الهيدر + المنيو (مطابق لصفحة الخدمات) ===== */
+    header.site-header {
+      background-color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      position: static;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo img {
+      height: 80px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .header-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    nav.main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px 16px;
+    }
+
+    nav.main-nav a {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      background-color: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    nav.main-nav a:hover {
+      background-color: var(--primary-light);
+    }
+
+        nav.main-nav a.active {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* ===== محتوى صفحة الإدارة ===== */
+    main {
+      max-width: 800px;
+      margin: 24px auto 40px;
+      padding: 0 16px;
+    }
+
+    .view { display: none; animation: fadeIn 0.3s ease; }
+    .view.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .admin-card { 
+      background: var(--card-bg); 
+      border-radius: 16px; 
+      padding: 25px; 
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08); 
+      border-top: 4px solid var(--primary); 
+      text-align: center; 
+    }
+    
+    .form-group { text-align: right; margin-bottom: 15px; }
+    label { display: block; font-size: 0.9rem; margin-bottom: 5px; font-weight: 600; }
+    input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-family: inherit; box-sizing: border-box; }
+    input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(11,90,132,0.1); }
+    
+    .btn { width: 100%; padding: 12px; border-radius: 999px; border: none; cursor: pointer; font-weight: 600; transition: 0.3s; margin-top: 10px; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-outline { border: 1px solid var(--primary); color: var(--primary); background: transparent; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+
+    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+    .menu-item { padding: 20px; border: 1px solid #eee; border-radius: 12px; cursor: pointer; transition: 0.2s; background: #fff; }
+    .menu-item:hover { background: var(--primary-light); border-color: var(--primary); }
+
+    .status-msg { margin-top: 15px; font-size: 0.85rem; min-height: 20px; }
+    
+    .result-item { text-align: right; padding: 12px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
+    .result-item:hover { background: var(--primary-light); border-color: var(--primary); }
+
+    /* ===== التذييل (مطابق لصفحة الخدمات) ===== */
+    footer.site-footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #ffffff;
+      background-color: var(--primary);
+      padding: 8px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 480px) {
+      .menu-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-top">
+      <div class="header-logo">
+        <img src="LOGO.png" class="logo" alt="مخيم الهلال الجنوبي -كنعان-">
+        <div class="header-title">مخيم الهلال الجنوبي -كنعان-</div>
+      </div>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html">الصفحة الرئيسية</a>
+      <a href="events.html">آخر الفعاليات</a>
+      <a href="admins.html">أعضاء الإدارة</a>
+      <a href="services.html">الخدمات الإلكترونية</a>
+      <a href="gallery.html">ألبوم الصور</a>
+      <a href="map.html">الخريطة التفاعلية</a>
+      <a href="admin.html" class="active">خدمات الإدارة</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="loginView" class="view active">
+      <div class="admin-card">
+        <img src="LOGO.png" style="width: 180px; margin-bottom: 15px;" alt="Logo">
+        <h3>دخول الإدارة</h3>
+        <p class="muted">يرجى إدخال بيانات الاعتماد للوصول للصلاحيات</p>
+        <div class="form-group">
+          <label>اسم المستخدم</label>
+          <input type="text" id="user" placeholder="أدخل الاسم">
+        </div>
+        <div class="form-group">
+          <label>كلمة المرور</label>
+          <input type="password" id="pass" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary" onclick="handleLogin()">تسجيل الدخول</button>
+        <div id="loginMsg" class="status-msg"></div>
+      </div>
+    </section>
+
+    <section id="dashboardView" class="view">
+      <div class="admin-card">
+        <h3>مرحباً، <span id="adminName">...</span></h3>
+        <p id="permissionTag" class="muted"></p>
+        
+        <div class="menu-grid">
+          <div class="menu-item" onclick="showView('searchView')">
+            <strong>🔍 استعلام وتعديل</strong>
+            <p style="font-size: 0.75rem; margin-top:5px;">البحث عن فرد وتعديل بياناته</p>
+          </div>
+          <div id="addOption" class="menu-item" onclick="showView('addView')">
+            <strong>➕ إضافة عائلة</strong>
+            <p style="font-size: 0.75rem; margin-top:5px;">إضافة بيانات جديدة للشيت</p>
+          </div>
+        </div>
+        <button class="btn btn-outline" style="width: auto; padding: 5px 20px; margin-top: 20px;" onclick="location.reload()">تسجيل خروج</button>
+      </div>
+    </section>
+
+    <section id="searchView" class="view">
+      <div class="admin-card">
+        <h3>البحث والتعديل</h3>
+        <div class="form-group">
+          <label>ابحث بالاسم أو رقم الهوية</label>
+          <input type="text" id="searchKey" placeholder="مثال: أحمد أو 402...">
+          <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button class="btn btn-primary" id="searchBtn" onclick="searchPerson()">بحث في النظام</button>
+            <button class="btn btn-outline" onclick="showView('dashboardView')">رجوع</button>
+          </div>
+        </div>
+        
+        <div id="searchResultsContainer" style="display: none; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px;">
+           <p class="muted" style="text-align: right;">نتائج البحث (اختر العائلة المطلوبة):</p>
+           <div id="resultsList"></div>
+        </div>
+
+        <div id="editForm" style="display: none; border-top: 2px solid var(--primary-light); padding-top: 20px; margin-top: 20px;">
+          <h4 id="editHeader" style="color: var(--primary); text-align: right;">تعديل بيانات العائلة</h4>
+          <div class="form-group"><label>اسم رب الأسرة</label><input type="text" id="editName"></div>
+          <div class="form-group"><label>رقم الهوية</label><input type="text" id="editNid"></div>
+          <div class="form-group"><label>رقم التواصل</label><input type="text" id="editPhone"></div>
+          <div class="form-group"><label>اسم الزوجة</label><input type="text" id="editWifeName"></div>
+          <div class="form-group"><label>هوية الزوجة</label><input type="text" id="editWifeNid"></div>
+          <div class="form-group"><label>عدد الأفراد</label><input type="number" id="editCount"></div>
+          <div class="form-group"><label>السكن الأصلي</label><input type="text" id="editAddress"></div>
+          <div class="form-group">
+            <label>العمارة</label>
+            <select id="editBuilding"><option value="">جاري تحميل القائمة...</option></select>
+          </div>
+          
+          <button id="saveBtn" class="btn btn-primary" onclick="saveEdit()">حفظ التعديلات</button>
+          <button class="btn btn-outline" onclick="hideEditForm()">إلغاء</button>
+          <div id="editMsg" class="status-msg"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="addView" class="view">
+      <div class="admin-card">
+        <h3>إضافة عائلة جديدة</h3>
+        <p class="muted">سيتم إضافة البيانات في سطر جديد تلقائياً</p>
+        
+        <div class="form-group"><label>اسم رب الأسرة</label><input type="text" id="newName"></div>
+        <div class="form-group"><label>رقم الهوية</label><input type="text" id="newNid"></div>
+        <div class="form-group"><label>رقم التواصل</label><input type="text" id="newPhone"></div>
+        <div class="form-group"><label>اسم الزوجة</label><input type="text" id="newWifeName"></div>
+        <div class="form-group"><label>هوية الزوجة</label><input type="text" id="newWifeNid"></div>
+        <div class="form-group"><label>عدد الأفراد</label><input type="number" id="newCount"></div>
+        <div class="form-group"><label>السكن الأصلي</label><input type="text" id="newAddress"></div>
+        <div class="form-group">
+          <label>العمارة</label>
+          <select id="newBuilding"><option value="">جاري تحميل القائمة...</option></select>
+        </div>
+        
+        <button class="btn btn-primary" id="addBtn" onclick="addNew()">إضافة للنظام</button>
+        <button class="btn btn-outline" onclick="showView('dashboardView')">إلغاء والعودة</button>
+        <div id="addMsg" class="status-msg"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    جميع الحقوق محفوظة &copy; مخيم الهلال الجنوبي -كنعان-  &copy;  تصميم م. أحمد ماضي 
+  </footer>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbysLJxzQK7Xs3Is7rmHU_gAAzuTb5rwLhWrtuFPS4FvnK-VO_qUyfL3VzS_-55Gv07WWA/exec";
+    let currentUser = null;
+
+    async function fetchBuildingsFromServer() {
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "getBuildings" })
+        });
+        const result = await response.json();
+        let optionsHtml = '<option value="">-- اختر العمارة (اختياري) --</option>';
+        if (result.status === "success" && result.buildings.length > 0) {
+          optionsHtml += result.buildings.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+        }
+        document.getElementById('editBuilding').innerHTML = optionsHtml;
+        document.getElementById('newBuilding').innerHTML = optionsHtml;
+        return true;
+      } catch (e) {
+        console.error("خطأ في جلب قائمة العمارات:", e);
+        return false;
+      }
+    }
+
+    function showView(viewId) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
+      resetAllInputs();
+      document.getElementById('editForm').style.display = 'none';
+      document.getElementById('searchResultsContainer').style.display = 'none';
+      if (viewId === 'addView' || viewId === 'searchView') {
+        fetchBuildingsFromServer();
+      }
+    }
+
+    function resetAllInputs() {
+      document.querySelectorAll('input').forEach(input => {
+        if(input.id !== 'user' && input.id !== 'pass') input.value = "";
+      });
+    }
+
+    function hideEditForm() {
+      document.getElementById('editForm').style.display = 'none';
+      document.getElementById('searchResultsContainer').style.display = 'block';
+    }
+
+    async function handleLogin() {
+      const user = document.getElementById('user').value.trim();
+      const pass = document.getElementById('pass').value.trim();
+      const msg = document.getElementById('loginMsg');
+      if (!user || !pass) { msg.style.color="red"; msg.innerText = "❌ الحقول مطلوبة"; return; }
+
+      msg.style.color = "orange";
+      msg.innerText = "⏳ جاري التحقق...";
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "login", username: user, password: pass })
+        });
+        const result = await response.json();
+        if (result.status === "success") {
+          currentUser = { name: result.username, role: result.role };
+          loadDashboard();
+        } else {
+          msg.style.color = "red";
+          msg.innerText = "❌ " + result.message;
+        }
+      } catch (e) { msg.innerText = "❌ خطأ في الاتصال"; }
+    }
+
+    function loadDashboard() {
+      document.getElementById('adminName').innerText = currentUser.name;
+      let roles = { "admin": "مدير نظام", "editor": "محرر بيانات", "viewer": "مستعرض" };
+      document.getElementById('permissionTag').innerText = "الصلاحية: " + (roles[currentUser.role] || "غير محدد");
+      const addBtn = document.getElementById('addOption');
+      if (currentUser.role === "viewer") {
+        addBtn.style.opacity = "0.5";
+        addBtn.onclick = () => alert("لا تملك صلاحية الإضافة");
+      }
+      showView('dashboardView');
+    }
+
+    async function searchPerson() {
+      const query = document.getElementById('searchKey').value.trim();
+      const btn = document.getElementById('searchBtn');
+      const container = document.getElementById('searchResultsContainer');
+      const list = document.getElementById('resultsList');
+      if (!query) return alert("أدخل اسم أو هوية");
+      btn.disabled = true;
+      btn.innerText = "🔍 جاري البحث...";
+      document.getElementById('editForm').style.display = 'none';
+      container.style.display = 'none';
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "search", query: query })
+        });
+        const result = await response.json();
+        if (result.status === "success" && result.results.length > 0) {
+          list.innerHTML = "";
+          result.results.forEach(person => {
+            const item = document.createElement('div');
+            item.className = "result-item";
+            item.innerHTML = `<strong>${person.name}</strong> <br> <small>الهوية: ${person.nid} | العمارة: ${person.building || 'غير محدد'}</small>`;
+            item.onclick = () => populateEditForm(person);
+            list.appendChild(item);
+          });
+          container.style.display = 'block';
+        } else {
+          alert("لم يتم العثور على نتائج");
+        }
+      } catch (e) { alert("خطأ في جلب البيانات"); }
+      btn.disabled = false;
+      btn.innerText = "بحث في النظام";
+    }
+
+    async function populateEditForm(person) {
+      document.getElementById('editHeader').innerText = "تعديل بيانات: " + person.name;
+      document.getElementById('editName').value = person.name || "";
+      document.getElementById('editNid').value = person.nid || "";
+      document.getElementById('editPhone').value = person.phone || "";
+      document.getElementById('editWifeName').value = person.wifeName || "";
+      document.getElementById('editWifeNid').value = person.wifeNid || "";
+      document.getElementById('editCount').value = person.count || "";
+      document.getElementById('editAddress').value = person.address || "";
+      await fetchBuildingsFromServer();
+      document.getElementById('editBuilding').value = person.building || "";
+      document.getElementById('saveBtn').dataset.row = person.row;
+      document.getElementById('searchResultsContainer').style.display = 'none';
+      document.getElementById('editForm').style.display = 'block';
+    }
+
+    async function saveEdit() {
+      if (currentUser.role === "viewer") return alert("صلاحيتك للمشاهدة فقط");
+      const row = document.getElementById('saveBtn').dataset.row;
+      const msg = document.getElementById('editMsg');
+      const btn = document.getElementById('saveBtn');
+      const updatedData = {
+        row: row,
+        name: document.getElementById('editName').value,
+        nid: document.getElementById('editNid').value,
+        phone: document.getElementById('editPhone').value,
+        wifeName: document.getElementById('editWifeName').value,
+        wifeNid: document.getElementById('editWifeNid').value,
+        count: document.getElementById('editCount').value,
+        address: document.getElementById('editAddress').value,
+        building: document.getElementById('editBuilding').value
+      };
+      btn.disabled = true;
+      msg.style.color = "orange";
+      msg.innerText = "⏳ جاري الحفظ...";
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "update", rowData: updatedData, userRole: currentUser.role })
+        });
+        const result = await response.json();
+        if (result.status === "success") {
+          alert("✅ تم التعديل بنجاح");
+          showView('dashboardView');
+        } else { alert("❌ " + result.message); }
+      } catch (e) { alert("خطأ في الاتصال"); }
+      btn.disabled = false;
+      msg.innerText = "";
+    }
+
+    async function addNew() {
+      if (currentUser.role === "viewer") return alert("عذراً، لا تملك صلاحية الإضافة");
+      const btn = document.getElementById('addBtn');
+      const msg = document.getElementById('addMsg');
+      const newData = {
+        name: document.getElementById('newName').value.trim(),
+        nid: document.getElementById('newNid').value.trim(),
+        phone: document.getElementById('newPhone').value.trim(),
+        wifeName: document.getElementById('newWifeName').value.trim(),
+        wifeNid: document.getElementById('newWifeNid').value.trim(),
+        count: document.getElementById('newCount').value.trim(),
+        address: document.getElementById('newAddress').value.trim(),
+        building: document.getElementById('newBuilding').value.trim()
+      };
+      if (!newData.name || !newData.nid) { alert("الاسم ورقم الهوية حقول إجبارية"); return; }
+      btn.disabled = true;
+      msg.style.color = "orange";
+      msg.innerText = "⏳ جاري الإضافة للشيت...";
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "add", rowData: newData, userRole: currentUser.role })
+        });
+        const result = await response.json();
+        if (result.status === "success") {
+          alert("✅ تم إضافة العائلة بنجاح");
+          showView('dashboardView');
+        } else { alert("❌ " + result.message); }
+      } catch (e) { alert("❌ حدث خطأ في الاتصال"); } finally {
+        btn.disabled = false;
+        msg.innerText = "";
+      }
+    }
+</script>
+</body>
+</html>
