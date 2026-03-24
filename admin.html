@@ -227,6 +227,7 @@
         
         <div id="searchResultsContainer" style="display: none; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px;">
            <p class="muted" style="text-align: right;">نتائج البحث (اختر العائلة المطلوبة):</p>
+          <div id="loadingDetailsMsg" class="status-msg" style="color: orange; text-align: center; display: none;">⏳ جاري تحميل بيانات العائلة...</div>
            <div id="resultsList"></div>
         </div>
 
@@ -280,7 +281,7 @@
   </footer>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyFy1laP6mHA7XxgRuQ1sQx6aGv8pAvxZRSE3fNlp4uB5ixtPliRfxB7bFoRD81vJzVPA/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBwg7j4K24eOfIVlkY9QPLv4szBkl_h2gtPkeqxIGTRsoW3DI9zn1o3C3FGYpQUs_M/exec";
     let currentUser = null;
 
     async function fetchBuildingsFromServer() {
@@ -396,7 +397,12 @@
       btn.innerText = "بحث في النظام";
     }
 
-    async function populateEditForm(person) {
+async function populateEditForm(person) {
+      // 1. إظهار رسالة التحميل وإخفاء القائمة الحالية مؤقتاً
+      const loadingMsg = document.getElementById('loadingDetailsMsg');
+      if(loadingMsg) loadingMsg.style.display = 'block';
+      
+      // 2. تحديث الحقول الأساسية التي وصلتنا من البحث سلفاً
       document.getElementById('editHeader').innerText = "تعديل بيانات: " + person.name;
       document.getElementById('editName').value = person.name || "";
       document.getElementById('editNid').value = person.nid || "";
@@ -405,9 +411,16 @@
       document.getElementById('editWifeNid').value = person.wifeNid || "";
       document.getElementById('editCount').value = person.count || "";
       document.getElementById('editAddress').value = person.address || "";
+
+      // 3. جلب قائمة العمارات (العملية التي قد تستغرق وقتاً)
       await fetchBuildingsFromServer();
+      
+      // 4. وضع قيمة العمارة بعد تحميل القائمة
       document.getElementById('editBuilding').value = person.building || "";
       document.getElementById('saveBtn').dataset.row = person.row;
+
+      // 5. إخفاء رسالة التحميل وإظهار نموذج التعديل
+      if(loadingMsg) loadingMsg.style.display = 'none';
       document.getElementById('searchResultsContainer').style.display = 'none';
       document.getElementById('editForm').style.display = 'block';
     }
