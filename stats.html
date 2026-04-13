@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <title>إحصائيات مخيم كنعان - لوحة التحكم</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary: #0b5a84;
+            --primary-light: #e6f2f8;
+            --accent: #e74c3c;
+            --text: #222;
+            --bg: #f5f5f5;
+            /* تحديث لون خلفية المربعات حسب طلبك ليتطابق مع الصورة */
+            --card-dark: #243441; 
+            --chart-text: #e0e6ed;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Cairo", sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            direction: rtl;
+        }
+
+        /* ===== الهيدر ===== */
+        header.site-header {
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header-logo { display: flex; align-items: center; gap: 12px; }
+        .header-logo img { height: 50px; width: auto; }
+        .header-title { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+
+        nav.main-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px 16px;
+        }
+
+        nav.main-nav a {
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            color: var(--primary);
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        nav.main-nav a:hover { background-color: var(--primary-light); }
+        nav.main-nav a.active {
+            background-color: var(--primary);
+            color: #ffffff;
+        }
+
+        /* ===== المحتوى الرئيسي ===== */
+        main {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .section-container {
+            background: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-right: 4px solid var(--primary);
+            padding-right: 10px;
+            font-weight: 700;
+        }
+
+        /* شبكة البطاقات الإحصائية العلوية */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--primary-light);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(11, 90, 132, 0.1);
+        }
+
+        .stat-card h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .stat-card p {
+            margin: 5px 0 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        /* شبكة الرسوم البيانية */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 992px) {
+            .charts-grid { grid-template-columns: repeat(2, 1fr); }
+            .full-width { grid-column: 1 / -1; }
+        }
+
+        .chart-box {
+            background: var(--card-dark);
+            padding: 25px;
+            border-radius: 12px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-box-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #4db6ac;
+            font-size: 1.1rem;
+        }
+
+        .canvas-container {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            min-height: 300px;
+        }
+
+        /* حل مشكلة خروج البيانات في العنصر الأخير */
+        .large-chart-box {
+            min-height: 950px; /* زيادة الارتفاع الكلي للمربع */
+            padding-bottom: 40px;
+        }
+
+        .large-canvas-container {
+            height: 850px; /* ضمان مساحة كافية داخل المربع لجميع العمارات */
+        }
+
+        .notes-list {
+            color: white;
+            padding: 0;
+            list-style: none;
+            margin: auto 0;
+        }
+
+        .notes-list li {
+            margin-bottom: 15px;
+            font-size: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+
+        footer.site-footer {
+            text-align: center;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            margin-top: 40px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="header-top">
+            <div class="header-logo">
+                <img src="LOGO.png" alt="شعار">
+                <div class="header-title">مخيم الهلال الجنوبي -كنعان-</div>
+            </div>
+        </div>
+        <nav class="main-nav">
+            <a href="index.html">الصفحة الرئيسية</a>
+            <a href="events.html">آخر الفعاليات</a>
+            <a href="admins.html">أعضاء الإدارة</a>
+            <a href="services.html">الخدمات الإلكترونية</a>
+            <a href="map.html">الخريطة التفاعلية</a>
+            <a href="stats.html" class="active">إحصائيات المخيم</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="section-container">
+            <div class="section-title">نظرة عامة على البيانات الإحصائية</div>
+            <div class="stats-grid">
+                <div class="stat-card"><h2>563</h2><p>العدد الكلي للمخيم [cite: 14, 21]</p></div>
+                <div class="stat-card"><h2>120</h2><p>عائلات مستفيدة [cite: 12, 22]</p></div>
+                <div class="stat-card"><h2>23</h2><p>عدد البنايات [cite: 9, 10]</p></div>
+                <div class="stat-card"><h2>63</h2><p>عدد الأسر الكبيرة [cite: 17, 18]</p></div>
+                <div class="stat-card"><h2>5</h2><p>متوسط حجم الأسرة [cite: 16, 19]</p></div>
+                <div class="stat-card"><h2>17</h2><p>حالات خاصة [cite: 15, 20]</p></div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-box">
+                <div class="chart-box-title">أولوية العائلات</div>
+                <div class="canvas-container">
+                    <canvas id="priorityChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <div class="chart-box-title">حجم العائلات</div>
+                <div class="canvas-container">
+                    <canvas id="sizeChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <div class="chart-box-title">توزيع الفئات الأكثر احتياجاً</div>
+                <div class="canvas-container">
+                    <canvas id="needsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <div class="chart-box-title">ملاحظات إحصائية (اجتماعياً)</div>
+                <ul class="notes-list">
+                    <li>• نسبة الأرامل: 76.47% (13 حالة) [cite: 63]</li>
+                    <li>• الحالات المنفصلة: 2 (11.76%) [cite: 61, 65]</li>
+                    <li>• العزباء: 2 (11.76%) [cite: 62, 64]</li>
+                </ul>
+            </div>
+
+            <div class="chart-box full-width large-chart-box">
+                <div class="chart-box-title">توزيع عدد الأفراد حسب العمارة (البيانات كاملة)</div>
+                <div class="canvas-container large-canvas-container">
+                    <canvas id="buildingChartCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        جميع الحقوق محفوظة &copy; مخيم الهلال الجنوبي -كنعان- &copy; تصميم م. أحمد ماضي
+    </footer>
+
+    <script>
+        Chart.defaults.color = '#e0e6ed';
+        Chart.defaults.font.family = 'Cairo';
+
+        // الرسم الأول: أولوية العائلات [cite: 11, 25, 31]
+        new Chart(document.getElementById('priorityChart'), {
+            type: 'bar',
+            data: {
+                labels: ['منخفضة', 'متوسطة', 'عالية'],
+                datasets: [{
+                    label: 'عدد العائلات',
+                    data: [75, 15, 30],
+                    backgroundColor: '#36a2a2',
+                    borderRadius: 5
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // الرسم الثاني: حجم العائلات [cite: 28, 30]
+        new Chart(document.getElementById('sizeChart'), {
+            type: 'bar',
+            data: {
+                labels: ['كبيرة', 'متوسطة', 'صغيرة'],
+                datasets: [{
+                    label: 'عدد العائلات',
+                    data: [44, 41, 34],
+                    backgroundColor: '#26a69a',
+                    borderRadius: 5
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // الرسم الثالث: توزيع الاحتياج [cite: 61, 62, 63]
+        new Chart(document.getElementById('needsChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['أرملة', 'عزباء', 'منفصلة'],
+                datasets: [{
+                    data: [13, 2, 2],
+                    backgroundColor: ['#0b5a84', '#4db6ac', '#ffffff'],
+                    borderWidth: 0
+                }]
+            },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+
+        // الرسم الرابع: العمارات (تم ضبطه لعدم الخروج عن الإطار) [cite: 104-112]
+        new Chart(document.getElementById('buildingChartCanvas'), {
+            type: 'bar',
+            data: {
+                labels: [
+                    'شوالي', 'الفقعاوي', 'أبو إسلام', 'الشيخ حسن', 'أبو عبدو', 
+                    'حلوة', 'الشيخ ديب', 'الخطيب 2', 'الأعوج', 'شكشك', 
+                    'الحاج', 'الزقزوق', 'فارس', 'ماضي', 'السر', 
+                    'الحلبي', 'أبو غليون', 'الخطيب 1', 'الروضة', 'محمد فارس', 
+                    'أبو اسلام', 'النويلة'
+                ],
+                datasets: [{
+                    label: 'عدد الأفراد',
+                    data: [71, 60, 51, 50, 32, 32, 31, 29, 27, 26, 23, 23, 17, 16, 15, 12, 10, 8, 8, 7, 5, 4],
+                    backgroundColor: '#36a2a2',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, min: 0, max: 80 },
+                    y: { grid: { display: false }, ticks: { font: { size: 12 } } }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
