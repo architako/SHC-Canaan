@@ -38,7 +38,6 @@
       text-decoration: none;
     }
 
-    /* ===== الهيدر + المنيو (مطابق لصفحة الخدمات) ===== */
     header.site-header {
       background-color: #ffffff;
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
@@ -94,14 +93,13 @@
       background-color: var(--primary-light);
     }
 
-        nav.main-nav a.active {
+    nav.main-nav a.active {
       background-color: var(--primary);
       color: #ffffff;
       border-color: var(--primary);
       font-weight: 600;
     }
 
-    /* ===== محتوى صفحة الإدارة ===== */
     main {
       max-width: 800px;
       margin: 24px auto 40px;
@@ -140,7 +138,6 @@
     .result-item { text-align: right; padding: 12px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
     .result-item:hover { background: var(--primary-light); border-color: var(--primary); }
 
-    /* ===== التذييل (مطابق لصفحة الخدمات) ===== */
     footer.site-footer {
       text-align: center;
       font-size: 0.8rem;
@@ -160,7 +157,7 @@
   <header class="site-header">
     <div class="header-top">
       <div class="header-logo">
-        <img src="LOGO.png" class="logo" alt="مخيم الهلال الجنوبي -كنعان-">
+        <img src="LOGO.png" class="logo" alt="مخيم الهلال الجنوبي -كنعان-休">
         <div class="header-title">مخيم الهلال الجنوبي -كنعان-</div>
       </div>
     </div>
@@ -245,6 +242,10 @@
             <label>العمارة</label>
             <select id="editBuilding"><option value="">جاري تحميل القائمة...</option></select>
           </div>
+          <div class="form-group">
+            <label>الحالة الاجتماعية</label>
+            <select id="editSocialStatus"><option value="">جاري تحميل القائمة...</option></select>
+          </div>
           
           <button id="saveBtn" class="btn btn-primary" onclick="saveEdit()">حفظ التعديلات</button>
           <button class="btn btn-outline" onclick="hideEditForm()">إلغاء</button>
@@ -269,6 +270,10 @@
           <label>العمارة</label>
           <select id="newBuilding"><option value="">جاري تحميل القائمة...</option></select>
         </div>
+        <div class="form-group">
+          <label>الحالة الاجتماعية</label>
+          <select id="newSocialStatus"><option value="">جاري تحميل القائمة...</option></select>
+        </div>
         
         <button class="btn btn-primary" id="addBtn" onclick="addNew()">إضافة للنظام</button>
         <button class="btn btn-outline" onclick="showView('dashboardView')">إلغاء والعودة</button>
@@ -282,25 +287,37 @@
   </footer>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBwg7j4K24eOfIVlkY9QPLv4szBkl_h2gtPkeqxIGTRsoW3DI9zn1o3C3FGYpQUs_M/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzG2YdQLdwIU49wtQ59fiCm-Qk8Z6nOLE3-VFJ1tqFON8Sjt0JZTIyaYtS99rCUd-ia/exec";
     let currentUser = null;
 
-    async function fetchBuildingsFromServer() {
+    // دالة محسنة لجلب القوائم المنسدلة (العمارات والحالة الاجتماعية)
+    async function fetchOptionsFromServer() {
       try {
         const response = await fetch(SCRIPT_URL, {
           method: "POST",
-          body: JSON.stringify({ action: "getBuildings" })
+          body: JSON.stringify({ action: "getBuildings" }) // ملاحظة: السكربت يرجع كلاهما في هذا الأكشن المعدل
         });
         const result = await response.json();
-        let optionsHtml = '<option value="">-- اختر العمارة (اختياري) --</option>';
+        
+        // تعبئة العمارات
+        let bOptions = '<option value="">-- اختر العمارة (اختياري) --</option>';
         if (result.status === "success" && result.buildings.length > 0) {
-          optionsHtml += result.buildings.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+          bOptions += result.buildings.map(opt => `<option value="${opt}">${opt}</option>`).join('');
         }
-        document.getElementById('editBuilding').innerHTML = optionsHtml;
-        document.getElementById('newBuilding').innerHTML = optionsHtml;
+        document.getElementById('editBuilding').innerHTML = bOptions;
+        document.getElementById('newBuilding').innerHTML = bOptions;
+
+        // تعبئة الحالة الاجتماعية
+        let sOptions = '<option value="">-- اختر الحالة الاجتماعية --</option>';
+        if (result.status === "success" && result.socialStatuses && result.socialStatuses.length > 0) {
+          sOptions += result.socialStatuses.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+        }
+        document.getElementById('editSocialStatus').innerHTML = sOptions;
+        document.getElementById('newSocialStatus').innerHTML = sOptions;
+
         return true;
       } catch (e) {
-        console.error("خطأ في جلب قائمة العمارات:", e);
+        console.error("خطأ في جلب البيانات:", e);
         return false;
       }
     }
@@ -312,12 +329,12 @@
       document.getElementById('editForm').style.display = 'none';
       document.getElementById('searchResultsContainer').style.display = 'none';
       if (viewId === 'addView' || viewId === 'searchView') {
-        fetchBuildingsFromServer();
+        fetchOptionsFromServer();
       }
     }
 
     function resetAllInputs() {
-      document.querySelectorAll('input').forEach(input => {
+      document.querySelectorAll('input, select').forEach(input => {
         if(input.id !== 'user' && input.id !== 'pass') input.value = "";
       });
     }
@@ -332,10 +349,8 @@
       const pass = document.getElementById('pass').value.trim();
       const msg = document.getElementById('loginMsg');
       if (!user || !pass) { msg.style.color="red"; msg.innerText = "❌ الحقول مطلوبة"; return; }
-
       msg.style.color = "orange";
       msg.innerText = "⏳ جاري التحقق...";
-
       try {
         const response = await fetch(SCRIPT_URL, {
           method: "POST",
@@ -385,7 +400,7 @@
           result.results.forEach(person => {
             const item = document.createElement('div');
             item.className = "result-item";
-            item.innerHTML = `<strong>${person.name}</strong> <br> <small>الهوية: ${person.nid} | العمارة: ${person.building || 'غير محدد'}</small>`;
+            item.innerHTML = `<strong>${person.name}</strong> <br> <small>الهوية: ${person.nid} | الحالة: ${person.socialStatus || 'غير محدد'}</small>`;
             item.onclick = () => populateEditForm(person);
             list.appendChild(item);
           });
@@ -398,12 +413,10 @@
       btn.innerText = "بحث في النظام";
     }
 
-async function populateEditForm(person) {
-      // 1. إظهار رسالة التحميل وإخفاء القائمة الحالية مؤقتاً
+    async function populateEditForm(person) {
       const loadingMsg = document.getElementById('loadingDetailsMsg');
       if(loadingMsg) loadingMsg.style.display = 'block';
       
-      // 2. تحديث الحقول الأساسية التي وصلتنا من البحث سلفاً
       document.getElementById('editHeader').innerText = "تعديل بيانات: " + person.name;
       document.getElementById('editName').value = person.name || "";
       document.getElementById('editNid').value = person.nid || "";
@@ -413,14 +426,12 @@ async function populateEditForm(person) {
       document.getElementById('editCount').value = person.count || "";
       document.getElementById('editAddress').value = person.address || "";
 
-      // 3. جلب قائمة العمارات (العملية التي قد تستغرق وقتاً)
-      await fetchBuildingsFromServer();
+      await fetchOptionsFromServer();
       
-      // 4. وضع قيمة العمارة بعد تحميل القائمة
       document.getElementById('editBuilding').value = person.building || "";
+      document.getElementById('editSocialStatus').value = person.socialStatus || "";
       document.getElementById('saveBtn').dataset.row = person.row;
 
-      // 5. إخفاء رسالة التحميل وإظهار نموذج التعديل
       if(loadingMsg) loadingMsg.style.display = 'none';
       document.getElementById('searchResultsContainer').style.display = 'none';
       document.getElementById('editForm').style.display = 'block';
@@ -440,7 +451,8 @@ async function populateEditForm(person) {
         wifeNid: document.getElementById('editWifeNid').value,
         count: document.getElementById('editCount').value,
         address: document.getElementById('editAddress').value,
-        building: document.getElementById('editBuilding').value
+        building: document.getElementById('editBuilding').value,
+        socialStatus: document.getElementById('editSocialStatus').value
       };
       btn.disabled = true;
       msg.style.color = "orange";
@@ -468,11 +480,12 @@ async function populateEditForm(person) {
         name: document.getElementById('newName').value.trim(),
         nid: document.getElementById('newNid').value.trim(),
         phone: document.getElementById('newPhone').value.trim(),
-        wifeName: document.getElementById('newWifeName').value.trim(),
+        wifeName: document.getElementById('newName').value.trim(),
         wifeNid: document.getElementById('newWifeNid').value.trim(),
         count: document.getElementById('newCount').value.trim(),
         address: document.getElementById('newAddress').value.trim(),
-        building: document.getElementById('newBuilding').value.trim()
+        building: document.getElementById('newBuilding').value.trim(),
+        socialStatus: document.getElementById('newSocialStatus').value.trim()
       };
       if (!newData.name || !newData.nid) { alert("الاسم ورقم الهوية حقول إجبارية"); return; }
       btn.disabled = true;
