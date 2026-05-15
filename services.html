@@ -19,6 +19,7 @@
       --card-bg: #ffffff;
       --text: #222;
       --muted: #777;
+      --success: #28a745;
     }
 
     * { box-sizing: border-box; }
@@ -34,7 +35,6 @@
 
     a { color: inherit; text-decoration: none; }
 
-    /* ===== الهيدر والمنيو الموحد ===== */
     header.site-header {
       background-color: #ffffff;
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
@@ -75,7 +75,6 @@
       font-weight: 600;
     }
 
-    /* ===== محتوى الصفحة ===== */
     main { max-width: 1100px; margin: 24px auto 40px; padding: 0 16px; }
 
     .login-wrapper { display: flex; justify-content: center; }
@@ -93,7 +92,6 @@
     .view { display: none; }
     .view.active { display: block; }
 
-    /* تنسيق عرض البيانات الشخصية */
     .data-table { width: 100%; margin-top: 15px; border-collapse: collapse; }
     .data-table tr { border-bottom: 1px solid #eee; }
     .data-table td { padding: 10px 5px; text-align: right; font-size: 0.9rem; }
@@ -105,30 +103,31 @@
       width: 100%; padding: 9px 10px; border-radius: 10px; border: 1px solid #ddd;
       font-size: 0.95rem; direction: ltr; text-align: left;
     }
-    form#loginForm input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(11,90,132,0.08);
-    }
     form#loginForm button {
       margin-top: 10px; padding: 9px; border-radius: 999px; border: none;
       background: var(--primary); color: #fff; font-size: 0.98rem; font-weight: 600; cursor: pointer;
     }
-    form#loginForm button:hover { opacity: 0.95; }
 
     .msg { margin-top: 10px; font-size: 0.85rem; color: #b3261e; min-height: 20px; }
 
-    /* روابط التواصل */
     .links { margin-top: 15px; font-size: 0.85rem; border-top: 1px solid #eee; padding-top: 10px; }
     .links a { display: inline-block; margin: 3px 6px; color: var(--primary); text-decoration: underline; }
+
+    .btn-complete {
+      background-color: var(--success);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 15px;
+    }
 
     footer.site-footer {
       text-align: center; font-size: 0.8rem; color: #ffffff;
       background-color: var(--primary); padding: 8px; margin-top: 24px;
-    }
-
-    @media (max-width: 480px) {
-      .login-card { padding: 18px 14px 16px; }
     }
   </style>
 </head>
@@ -162,15 +161,11 @@
         <form id="loginForm" onsubmit="handleResidentAccess(event)">
           <label for="nid">رقم الهوية</label>
           <input type="text" id="nid" placeholder="مثال: 4020XXXXXX" required>
-          
           <label for="phonePass">آخر 4 أرقام من الجوال (كلمة المرور)</label>
           <input type="password" id="phonePass" placeholder="****" maxlength="4" inputmode="numeric" required>
-          
           <button type="submit">دخول</button>
         </form>
-        
         <div class="msg" id="msg"></div>
-
         <div class="links">
           <a href="https://chat.whatsapp.com/BfQOvIDoivYCkicUiVSv8F" target="_blank">قروب الواتساب</a>
           <a href="https://www.facebook.com/SHC.Canaan" target="_blank">صفحة الفيس بوك</a>
@@ -180,7 +175,6 @@
       <div id="dataSection" class="login-card view">
         <h3 style="margin-bottom: 5px;">مرحباً بك</h3>
         <p id="resNameHeader" style="color: var(--primary); font-weight: 700; margin-bottom: 15px;"></p>
-        
         <table class="data-table">
           <tr><td class="data-label">رقم الهوية:</td><td id="d-nid"></td></tr>
           <tr><td class="data-label">رقم التواصل:</td><td id="d-phone"></td></tr>
@@ -189,9 +183,10 @@
           <tr><td class="data-label">عدد الأفراد:</td><td id="d-count"></td></tr>
           <tr><td class="data-label">العمارة:</td><td id="d-build"></td></tr>
           <tr><td class="data-label">السكن الأصلي:</td><td id="d-address"></td></tr>
+          <tr><td class="data-label">الحالة الاجتماعية:</td><td id="d-socialStatus"></td></tr>
         </table>
-
-        <button onclick="location.reload()" style="margin-top: 20px; padding: 8px 25px; border-radius: 999px; border: 1px solid var(--primary); background: transparent; color: var(--primary); font-family: inherit; cursor: pointer;">خروج</button>
+        <button class="btn-complete" onclick="goToUpdatePage()">📝 استكمال البيانات</button>
+        <button onclick="location.reload()" style="margin-top: 10px; padding: 8px 25px; border-radius: 999px; border: 1px solid var(--primary); background: transparent; color: var(--primary); cursor: pointer; width: 100%;">خروج</button>
       </div>
     </section>
   </main>
@@ -201,64 +196,109 @@
   </footer>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBwg7j4K24eOfIVlkY9QPLv4szBkl_h2gtPkeqxIGTRsoW3DI9zn1o3C3FGYpQUs_M/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgi5-TzSRxfKdUiV9aPBMvS_MUF9Wup2GdDbRq1Oaj0rLgyZAHragsWHuT6TsUfB1R/exec";
 
-    async function handleResidentAccess(event) {
-      // منع الصفحة من التحديث عند إرسال الفورم
-      event.preventDefault();
-
-      const nidInput = document.getElementById('nid').value.trim();
-      const passInput = document.getElementById('phonePass').value.trim();
-      const msgEl = document.getElementById('msg');
-
-      if (!nidInput || !passInput) {
-        msgEl.textContent = 'الرجاء إدخال البيانات المطلوبة.';
-        return;
-      }
-
-      msgEl.style.color = "orange";
-      msgEl.textContent = '⏳ جاري التحقق...';
-
-      try {
-        const response = await fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "search", query: nidInput })
-        });
-        const result = await response.json();
-
-        if (result.status === "success" && result.results.length > 0) {
-          const person = result.results[0];
-          const lastFour = String(person.phone || "").slice(-4);
-
-          if (passInput === lastFour) {
-            showResidentData(person);
-          } else {
-            msgEl.style.color = "#b3261e";
-            msgEl.textContent = '❌ كلمة المرور غير صحيحة (تأكد من آخر 4 أرقام للجوال).';
-          }
-        } else {
-          msgEl.style.color = "#b3261e";
-          msgEl.textContent = '❌ رقم الهوية غير مسجل لدينا.';
-        }
-      } catch (e) {
-        msgEl.style.color = "#b3261e";
-        msgEl.textContent = '❌ حدث خطأ في الاتصال بالنظام.';
-      }
+  // دالة تجميع القيم من مربعات الاختيار
+  function getSelected(name, otherId) {
+    let vals = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(c => c.value);
+    const otherVal = otherId ? document.getElementById(otherId).value : "";
+    if (vals.includes('أخرى') && otherVal) {
+      vals[vals.indexOf('أخرى')] = "أخرى: " + otherVal;
     }
+    return vals.length > 0 ? vals.join(' + ') : 'لا يوجد';
+  }
 
-    function showResidentData(person) {
-      document.getElementById('resNameHeader').textContent = person.name;
-      document.getElementById('d-nid').textContent = person.nid;
-      document.getElementById('d-phone').textContent = person.phone;
-      document.getElementById('d-wife').textContent = person.wifeName || "---";
-      document.getElementById('d-wifeNid').textContent = person.wifeNid || "---";
-      document.getElementById('d-count').textContent = person.count || "0";
-      document.getElementById('d-build').textContent = person.building || "غير محدد";
-      document.getElementById('d-address').textContent = person.address || "---";
+  // دالة الحفظ التي يتم استدعاؤها عند الضغط على الزر في صفحة update.html أو النموذج
+  async function handleDataUpdate(event) {
+    event.preventDefault();
+    
+    // تجميع بيانات الأبناء من الحقول الديناميكية (إن وجدت)
+    const childrenEntries = Array.from(document.querySelectorAll('.child-entry')).map(f => ({
+      name: f.querySelector('.c-name').value,
+      rel: f.querySelector('.c-rel').value,
+      nid: f.querySelector('.c-nid').value,
+      dob: f.querySelector('.c-dob').value,
+      dis: f.querySelector('.c-dis').value,
+      chr: f.querySelector('.c-chr').value
+    }));
 
-      document.getElementById('loginSection').classList.remove('active');
-      document.getElementById('dataSection').classList.add('active');
+    const payload = {
+      action: "updateData", // يجب أن يطابق السكربت
+      headNid: document.getElementById('d-nid').textContent,
+      k_dobHead: document.getElementById('k_dobHead').value,
+      l_disHead: getSelected('dis_head', ''), 
+      m_chrHead: getSelected('chr_head', 'head_chr_other'),
+      n_dobWife: document.getElementById('n_dobWife') ? document.getElementById('n_dobWife').value : "",
+      o_disWife: getSelected('dis_wife', ''),
+      p_chrWife: getSelected('chr_wife', 'wife_chr_other'),
+      q_pregnant: document.getElementById('q_isPregnant') && document.getElementById('q_isPregnant').checked ? "نعم" : "لا",
+      r_nursing: document.getElementById('r_isNursing') && document.getElementById('r_isNursing').checked ? "نعم" : "لا",
+      s_uni: document.getElementById('s_uniStudents').value,
+      children: childrenEntries // إرسال الأبناء كمصفوفة
+    };
+
+    alert("⏳ جاري الاتصال بقاعدة البيانات للحفظ...");
+    
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json();
+      
+      if (result.status === "success") {
+        alert("✅ " + result.message);
+        location.reload(); 
+      } else {
+        alert("❌ خطأ من السكربت: " + result.message);
+      }
+    } catch (error) {
+      alert("❌ فشل الاتصال بالخادم. تأكد من تحديث رابط السكربت ونشره كإصدار جديد.");
     }
-  </script>
+  }
+
+  // دالة الدخول (كما هي في ملفك الأصلي)
+  async function handleResidentAccess(event) {
+    event.preventDefault();
+    const nidInput = document.getElementById('nid').value.trim();
+    const passInput = document.getElementById('phonePass').value.trim();
+    const msgEl = document.getElementById('msg');
+    msgEl.textContent = '⏳ جاري التحقق...';
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "search", query: nidInput })
+      });
+      const result = await response.json();
+      if (result.status === "success" && result.results.length > 0) {
+        const person = result.results[0];
+        if (passInput === String(person.phone || "").slice(-4)) {
+          showResidentData(person);
+        } else { msgEl.textContent = '❌ كلمة المرور غير صحيحة.'; }
+      } else { msgEl.textContent = '❌ رقم الهوية غير مسجل.'; }
+    } catch (e) { msgEl.textContent = '❌ خطأ في الاتصال.'; }
+  }
+
+  function showResidentData(person) {
+    document.getElementById('resNameHeader').textContent = person.name;
+    document.getElementById('d-nid').textContent = person.nid;
+    document.getElementById('d-phone').textContent = person.phone;
+    document.getElementById('d-wife').textContent = person.wifeName || "---";
+    document.getElementById('d-wifeNid').textContent = person.wifeNid || "---";
+    document.getElementById('d-count').textContent = person.count || "0";
+    document.getElementById('d-build').textContent = person.building || "غير محدد";
+    document.getElementById('d-address').textContent = person.address || "---";
+    document.getElementById('d-socialStatus').textContent = person.socialStatus || "---";
+    document.getElementById('loginSection').classList.remove('active');
+    document.getElementById('dataSection').classList.add('active');
+  }
+
+  function goToUpdatePage() {
+    const nid = document.getElementById('d-nid').textContent;
+    const social = document.getElementById('d-socialStatus').textContent;
+    const count = document.getElementById('d-count').textContent;
+    window.location.href = `update.html?nid=${nid}&social=${encodeURIComponent(social)}&count=${count}`;
+  }
+</script>
 </body>
 </html>
