@@ -47,6 +47,9 @@
     
     .view-mode .checkbox-item:has(input:not(:checked)) { display: none; }
     .view-mode .checkbox-group { border: none; padding: 0; }
+    
+    /* ستايل لرسالة التنبيه الخاصة بالحقول الإجبارية */
+    .field-hint { font-size: 0.75rem; color: var(--danger); font-weight: normal; margin-top: 2px; display: block; }
   </style>
 </head>
 <body class="view-mode">
@@ -204,7 +207,9 @@
         <legend>بيانات الابن/الابنة (${i})</legend>
         <label>الاسم رباعي</label><input type="text" class="c-name" required disabled>
         <label>الصلة</label><select class="c-rel" disabled><option value="ابن">ابن</option><option value="ابنة">ابنة</option></select>
-        <label>رقم الهوية</label><input type="text" class="c-nid" disabled>
+        <label>رقم الهوية</label>
+        <input type="text" class="c-nid" required disabled pattern="[0-9]{9}" title="يجب إدخال رقم هوية صحيح يتكون من 9 أرقام" maxlength="9" oninput="validateNid(this)">
+        <span class="field-hint">* رقم الهوية إجباري (9 أرقام)</span>
         <label>تاريخ الميلاد</label><input type="date" class="c-dob" disabled>
         <label>هل يوجد إعاقة؟</label>
         <select class="c-dis" onchange="toggleBox(this, 'c_dis_box_${i}')" disabled>
@@ -236,6 +241,14 @@
           <input type="text" id="c_chr_other_${i}" placeholder="اكتب المرض الآخر" style="display:none; margin-top:5px;" disabled>
         </div>
       </fieldset>`;
+  }
+
+  // وظيفة لمنع إدخال غير الأرقام في حقل الهوية
+  function validateNid(input) {
+    input.value = input.value.replace(/[^0-9]/g, '');
+    if (input.value.length > 9) {
+      input.value = input.value.slice(0, 9);
+    }
   }
 
   window.onload = async function() {
@@ -362,6 +375,17 @@
 
   async function handleDataUpdate(event) {
     event.preventDefault();
+    
+    // إضافي: التحقق اليدوي من صحة أرقام الهوية قبل الإرسال
+    const nids = document.querySelectorAll('.c-nid');
+    for (let input of nids) {
+      if (input.value.length !== 9) {
+        alert("يرجى التأكد من أن جميع أرقام هوية الأبناء تتكون من 9 أرقام.");
+        input.focus();
+        return;
+      }
+    }
+
     const overlay = document.getElementById('loadingOverlay');
     const progress = document.getElementById('loaderProgress');
     overlay.style.display = 'flex';
