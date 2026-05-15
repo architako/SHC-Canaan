@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بيانات مخيم الهلال الجنوبي -كنعان-</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary: #0b5a84; --bg: #f5f5f5; --card-bg: #ffffff; --text: #222; --muted: #777; --success: #28a745; --danger: #d93025; }
+    * { box-sizing: border-box; }
+    body { font-family: "Cairo", sans-serif; margin: 0; background: var(--bg); color: var(--text); direction: rtl; }
+    header.site-header { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .header-top { display: flex; align-items: center; gap: 10px; padding: 8px 16px; border-bottom: 1px solid #eee; }
+    .header-logo img { height: 80px; }
+    .header-title { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+    nav.main-nav { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 16px; }
+    nav.main-nav a { padding: 6px 10px; border-radius: 999px; font-size: 0.9rem; color: var(--primary); text-decoration: none; }
+    nav.main-nav a.active { background: var(--primary); color: #fff; font-weight: 600; }
+    main { max-width: 800px; margin: 24px auto; padding: 0 16px; }
+    .update-card { background: var(--card-bg); border-radius: 16px; padding: 20px; border-top: 4px solid var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    fieldset { border: 1px solid #eee; border-radius: 12px; padding: 15px; margin-bottom: 20px; background: #fafafa; position: relative; }
+    legend { color: var(--primary); font-weight: 700; padding: 0 10px; }
+    label { display: block; font-size: 0.85rem; margin-top: 10px; font-weight: 600; color: var(--muted); }
+    input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-top: 5px; font-family: inherit; transition: 0.3s; }
+    input:disabled, select:disabled { background: #f9f9f9; border-color: transparent; color: #000; cursor: default; -webkit-appearance: none; }
+    .checkbox-group { display: none; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin-top: 8px; }
+    .checkbox-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 0.85rem; }
+    .checkbox-item input { width: auto; margin: 0; }
+    
+    /* تنسيق خاص لحالة الحامل والمرضعة في وضع الاستعلام */
+    .status-badge { display: none; padding: 5px 12px; border-radius: 5px; font-size: 0.85rem; font-weight: bold; margin-top: 10px; }
+    .view-mode .status-badge.active { display: inline-flex; align-items: center; gap: 5px; background: #e8f5e9; color: var(--success); border: 1px solid var(--success); }
+    .view-mode .status-badge.inactive { display: inline-flex; background: #f5f5f5; color: #999; border: 1px solid #ddd; text-decoration: line-through; opacity: 0.6; }
+    .view-mode #pregnancyContainer label { display: none; } /* إخفاء التشيك بوكس الأصلي في وضع العرض */
+
+    .btn-save { background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 999px; width: 100%; font-weight: 700; cursor: pointer; margin-top: 20px; display: none; }
+    .btn-edit { background: var(--success); color: #fff; border: none; padding: 14px; border-radius: 999px; width: 100%; font-weight: 700; cursor: pointer; margin-top: 20px; display: none; }
+    footer { text-align: center; font-size: 0.8rem; color: #fff; background: var(--primary); padding: 10px; margin-top: 30px; }
+
+    #loadingOverlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.9); display: none; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 1000;
+    }
+    .loader-bar { width: 200px; height: 4px; background: #eee; border-radius: 10px; overflow: hidden; margin-top: 15px; }
+    .loader-progress { width: 0%; height: 100%; background: var(--primary); transition: width 0.3s; }
+    
+    .view-mode .checkbox-item:has(input:not(:checked)) { display: none; }
+    .view-mode .checkbox-group { border: none; padding: 0; }
+  </style>
+</head>
+<body class="view-mode">
+
+<div id="loadingOverlay">
+  <div class="header-title" id="statusText">جاري معالجة البيانات...</div>
+  <div class="loader-bar"><div class="loader-progress" id="loaderProgress"></div></div>
+</div>
+
+<header class="site-header">
+  <div class="header-top">
+    <div class="header-logo"><img src="LOGO.png" alt="Logo"></div>
+    <div class="header-title">مخيم الهلال الجنوبي -كنعان-</div>
+  </div>
+  <nav class="main-nav">
+    <a href="index.html">الصفحة الرئيسية</a>
+    <a href="events.html">آخر الفعاليات</a>
+    <a href="admins.html">أعضاء الإدارة</a>
+    <a href="services.html" class="active">الخدمات الإلكترونية</a>
+    <a href="gallery.html">ألبوم الصور</a>
+    <a href="map.html">الخريطة التفاعلية</a>
+    <a href="admin.html">خدمات الإدارة</a>
+    <a href="stats.html">إحصائيات المخيم</a>
+  </nav>
+</header>
+
+<main>
+  <div class="update-card">
+    <h3 id="pageTitle" style="text-align:center; color:var(--primary)">بيانات الأسرة المسجلة</h3>
+    <form id="fullUpdateForm" onsubmit="handleDataUpdate(event)">
+      
+      <fieldset>
+        <legend>بيانات رب الأسرة</legend>
+        <label>تاريخ ميلاد رب الأسرة (K)</label>
+        <input type="date" id="k_dobHead" required disabled>
+        
+        <label>هل يوجد إعاقة لرب الأسرة؟ (L)</label>
+        <select id="l_dis_select" onchange="toggleBox(this, 'l_dis_box')" disabled>
+          <option value="لا">لا</option><option value="نعم">نعم</option>
+        </select>
+        <div id="l_dis_box" class="checkbox-group">
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="حركية"> حركية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="حسية"> حسية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="بصرية"> بصرية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="سمعية"> سمعية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="بتر"> بتر</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="ذهنية"> ذهنية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="نفسية"> نفسية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="أخرى"> أخرى</div>
+        </div>
+
+        <label>هل يوجد أمراض مزمنة لرب الأسرة؟ (M)</label>
+        <select id="m_chr_select" onchange="toggleBox(this, 'm_chr_box')" disabled>
+          <option value="لا">لا</option><option value="نعم">نعم</option>
+        </select>
+        <div id="m_chr_box" class="checkbox-group">
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="ضغط"> ضغط</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="سكر"> سكر</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="قلب"> أمراض القلب</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="تنفسي"> جهاز تنفسي</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="كلى"> فشل كلوي</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="سرطان"> أورام</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="أخرى" onchange="toggleOtherInput(this, 'm_head_other')"> أخرى</div>
+          <input type="text" id="m_head_other" placeholder="اكتب المرض الآخر" style="display:none; margin-top:5px;" disabled>
+        </div>
+      </fieldset>
+
+      <fieldset id="wifeSection" style="display:none;">
+        <legend>بيانات الزوجة</legend>
+        <label>تاريخ ميلاد الزوجة (N)</label>
+        <input type="date" id="n_dobWife" disabled>
+        
+        <label>هل يوجد إعاقة للزوجة؟ (O)</label>
+        <select id="o_dis_select" onchange="toggleBox(this, 'o_dis_box')" disabled>
+          <option value="لا">لا</option><option value="نعم">نعم</option>
+        </select>
+        <div id="o_dis_box" class="checkbox-group">
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="حركية"> حركية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="حسية"> حسية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="بصرية"> بصرية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="سمعية"> سمعية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="بتر"> بتر</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="ذهنية"> ذهنية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="نفسية"> نفسية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="أخرى"> أخرى</div>
+        </div>
+
+        <label>هل يوجد أمراض مزمنة للزوجة؟ (P)</label>
+        <select id="p_chr_select" onchange="toggleBox(this, 'p_chr_box')" disabled>
+          <option value="لا">لا</option><option value="نعم">نعم</option>
+        </select>
+        <div id="p_chr_box" class="checkbox-group">
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="ضغط"> ضغط</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="سكر"> سكر</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="قلب"> أمراض القلب</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="تنفسي"> جهاز تنفسي</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="كلى"> فشل كلوي</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="سرطان"> أورام</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="أخرى" onchange="toggleOtherInput(this, 'p_wife_other')"> أخرى</div>
+          <input type="text" id="p_wife_other" placeholder="اكتب المرض الآخر" style="display:none; margin-top:5px;" disabled>
+        </div>
+
+        <div id="pregnancyContainer" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+          <label style="display:inline;"><input type="checkbox" id="q_isPregnant" onchange="updateBadges()" disabled> الزوجة حامل (Q)</label>
+          <label style="display:inline;"><input type="checkbox" id="r_isNursing" onchange="updateBadges()" disabled> الزوجة مرضعة (R)</label>
+          
+          <span id="badgePregnant" class="status-badge">الزوجة حامل</span>
+          <span id="badgeNursing" class="status-badge">الزوجة مرضعة</span>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>التعليم</legend>
+        <label>هل لديك طلاب جامعيين في الأسرة؟ (S)</label>
+        <select id="s_uniStudents" disabled><option value="لا">لا</option><option value="نعم">نعم</option></select>
+      </fieldset>
+
+      <div id="childrenContainer"></div>
+
+      <button type="button" id="editBtn" class="btn-edit" onclick="enableEditMode()">تعديل البيانات</button>
+      <button type="submit" id="saveBtn" class="btn-save">حفظ كافة التعديلات</button>
+      
+      <button type="button" onclick="window.location.href='services.html'" style="background:none; border:none; color:var(--muted); width:100%; margin-top:10px; cursor:pointer;">العودة للخلف</button>
+    </form>
+  </div>
+</main>
+
+<footer> جميع الحقوق محفوظة &copy; مخيم الهلال الجنوبي -كنعان- </footer>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz9wQpw7B9FXrMHXlIIPi85IfrtmW4cXQ7Eejidj5ucDH5KvEZiOymeHcUYsy_YMwJd/exec";
+  
+  const params = new URLSearchParams(window.location.search);
+  const headNid = params.get('nid');
+  const socialStatus = params.get('social') || "";
+  const totalMembers = parseInt(params.get('count')) || 0;
+
+  const isMarried = (socialStatus.includes("متزوج") || socialStatus === "");
+  if (isMarried) document.getElementById('wifeSection').style.display = "block";
+
+  let childrenNeeded = isMarried ? (totalMembers - 2) : (totalMembers - 1);
+  if (childrenNeeded < 0) childrenNeeded = 0;
+  
+  const container = document.getElementById('childrenContainer');
+  for (let i = 1; i <= childrenNeeded; i++) {
+    container.innerHTML += `
+      <fieldset>
+        <legend>بيانات الابن/الابنة (${i})</legend>
+        <label>الاسم رباعي</label><input type="text" class="c-name" required disabled>
+        <label>الصلة</label><select class="c-rel" disabled><option value="ابن">ابن</option><option value="ابنة">ابنة</option></select>
+        <label>رقم الهوية</label><input type="text" class="c-nid" disabled>
+        <label>تاريخ الميلاد</label><input type="date" class="c-dob" disabled>
+        <label>هل يوجد إعاقة؟</label>
+        <select class="c-dis" onchange="toggleBox(this, 'c_dis_box_${i}')" disabled>
+          <option value="لا">لا</option><option value="نعم">نعم</option>
+        </select>
+        <div id="c_dis_box_${i}" class="checkbox-group">
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="حركية"> حركية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="حسية"> حسية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="بصرية"> بصرية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="سمعية"> سمعية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="بتر"> بتر</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="ذهنية"> ذهنية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="نفسية"> نفسية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="أخرى"> أخرى</div>
+        </div>
+        <label>هل يوجد أمراض مزمنة؟</label>
+        <select class="c-chr" onchange="toggleBox(this, 'c_chr_box_${i}')" disabled>
+          <option value="لا">لا</option><option value="نعم">نعم</option>
+        </select>
+        <div id="c_chr_box_${i}" class="checkbox-group">
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="ضغط"> ضغط</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="سكر"> سكر</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="قلب"> أمراض القلب</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="تنفسي"> جهاز تنفسي</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="كلى"> فشل كلوي</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="سرطان"> أورام</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="أخرى" onchange="toggleOtherInput(this, 'c_chr_other_${i}')"> أخرى</div>
+          <input type="text" id="c_chr_other_${i}" placeholder="اكتب المرض الآخر" style="display:none; margin-top:5px;" disabled>
+        </div>
+      </fieldset>`;
+  }
+
+  window.onload = async function() {
+    if (!headNid) return;
+    const overlay = document.getElementById('loadingOverlay');
+    overlay.style.display = 'flex';
+
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: "getResidentData", headNid: headNid })
+      });
+      const res = await response.json();
+
+      if (res.status === "success" && res.exists) {
+        const d = res.data;
+        if(d.k_dobHead) document.getElementById('k_dobHead').value = formatDate(d.k_dobHead);
+        setSelectionAndChecks(d.l_disHead, 'l_dis_box', 'dis_head');
+        setSelectionAndChecks(d.m_chrHead, 'm_chr_box', 'chr_head', 'm_head_other');
+
+        if (isMarried) {
+          if(d.n_dobWife) document.getElementById('n_dobWife').value = formatDate(d.n_dobWife);
+          setSelectionAndChecks(d.o_disWife, 'o_dis_box', 'dis_wife');
+          setSelectionAndChecks(d.p_chrWife, 'p_chr_box', 'chr_wife', 'p_wife_other');
+          document.getElementById('q_isPregnant').checked = (d.q_pregnant === "نعم");
+          document.getElementById('r_isNursing').checked = (d.r_nursing === "نعم");
+          updateBadges(); // تحديث شكل البادجات
+        }
+        document.getElementById('s_uniStudents').value = d.s_uni || "لا";
+
+        const childFieldsets = document.querySelectorAll('#childrenContainer fieldset');
+        d.children.forEach((c, idx) => {
+          if (childFieldsets[idx]) {
+            const f = childFieldsets[idx];
+            f.querySelector('.c-name').value = c.name || "";
+            f.querySelector('.c-rel').value = c.rel || "ابن";
+            f.querySelector('.c-nid').value = c.nid || "";
+            if(c.dob) f.querySelector('.c-dob').value = formatDate(c.dob);
+            const i = idx + 1;
+            setSelectionAndChecks(c.dis, `c_dis_box_${i}`, `dis_child_${i}`);
+            setSelectionAndChecks(c.chr, `c_chr_box_${i}`, `chr_child_${i}`, `c_chr_other_${i}`);
+          }
+        });
+
+        document.getElementById('editBtn').style.display = "block";
+      } else {
+        enableEditMode();
+      }
+    } catch (e) { enableEditMode(); }
+    overlay.style.display = 'none';
+  };
+
+  // دالة لتحديث شكل البادجات (حامل/مرضعة) في وضع الاستعلام
+  function updateBadges() {
+    const isPregnant = document.getElementById('q_isPregnant').checked;
+    const isNursing = document.getElementById('r_isNursing').checked;
+    
+    const bPreg = document.getElementById('badgePregnant');
+    const bNurs = document.getElementById('badgeNursing');
+
+    if (isPregnant) {
+      bPreg.className = "status-badge active";
+      bPreg.innerHTML = "✅ الزوجة حامل (Q)";
+    } else {
+      bPreg.className = "status-badge inactive";
+      bPreg.innerHTML = "الزوجة غير حامل";
+    }
+
+    if (isNursing) {
+      bNurs.className = "status-badge active";
+      bNurs.innerHTML = "✅ الزوجة مرضعة (R)";
+    } else {
+      bNurs.className = "status-badge inactive";
+      bNurs.innerHTML = "الزوجة غير مرضعة";
+    }
+  }
+
+  function enableEditMode() {
+    document.body.classList.remove('view-mode');
+    document.querySelectorAll('input, select').forEach(el => el.disabled = false);
+    document.getElementById('editBtn').style.display = "none";
+    document.getElementById('saveBtn').style.display = "block";
+    document.getElementById('pageTitle').innerText = "تعديل بيانات الأسرة";
+  }
+
+  function formatDate(dateStr) {
+    if(!dateStr) return "";
+    try {
+      const d = new Date(dateStr);
+      return d.toISOString().split('T')[0];
+    } catch(e) { return ""; }
+  }
+
+  function setSelectionAndChecks(valStr, boxId, checkName, otherInputId) {
+    if (!valStr || valStr === "لا يوجد" || valStr === "لا") return;
+    const box = document.getElementById(boxId);
+    if(box) {
+      box.style.display = 'block';
+      box.previousElementSibling.value = "نعم";
+    }
+    const checks = document.querySelectorAll(`input[name="${checkName}"]`);
+    checks.forEach(ch => {
+      if (valStr.includes(ch.value)) ch.checked = true;
+      if (valStr.includes("أخرى:") && ch.value === "أخرى") {
+         ch.checked = true;
+         if(otherInputId) {
+           const otherInp = document.getElementById(otherInputId);
+           otherInp.style.display = 'block';
+           otherInp.value = valStr.split("أخرى: ")[1];
+         }
+      }
+    });
+  }
+
+  function toggleBox(select, id) { document.getElementById(id).style.display = (select.value === 'نعم' ? 'block' : 'none'); }
+  function toggleOtherInput(cb, id) { document.getElementById(id).style.display = cb.checked ? 'block' : 'none'; }
+  
+  function getCheckValues(name, otherId) {
+    let vals = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(c => c.value);
+    if (vals.includes('أخرى') && otherId && document.getElementById(otherId).value) {
+      vals[vals.indexOf('أخرى')] = "أخرى: " + document.getElementById(otherId).value;
+    }
+    return vals.length > 0 ? vals.join(' + ') : 'لا يوجد';
+  }
+
+  async function handleDataUpdate(event) {
+    event.preventDefault();
+    const overlay = document.getElementById('loadingOverlay');
+    const progress = document.getElementById('loaderProgress');
+    overlay.style.display = 'flex';
+    progress.style.width = '30%';
+
+    const childrenEntries = Array.from(document.querySelectorAll('#childrenContainer fieldset')).map((f, idx) => {
+      const i = idx + 1;
+      return {
+        name: f.querySelector('.c-name').value,
+        rel: f.querySelector('.c-rel').value,
+        nid: f.querySelector('.c-nid').value,
+        dob: f.querySelector('.c-dob').value,
+        dis: (f.querySelector('.c-dis').value === 'نعم') ? getCheckValues(`dis_child_${i}`, '') : 'لا يوجد',
+        chr: (f.querySelector('.c-chr').value === 'نعم') ? getCheckValues(`chr_child_${i}`, `c_chr_other_${i}`) : 'لا يوجد'
+      };
+    });
+
+    const updateDataPayload = {
+      action: "updateData", 
+      headNid: headNid,
+      k_dobHead: document.getElementById('k_dobHead').value,
+      l_disHead: (document.getElementById('l_dis_select').value === 'نعم') ? getCheckValues('dis_head', '') : 'لا يوجد',
+      m_chrHead: (document.getElementById('m_chr_select').value === 'نعم') ? getCheckValues('chr_head', 'm_head_other') : 'لا يوجد',
+      n_dobWife: isMarried ? document.getElementById('n_dobWife').value : "",
+      o_disWife: (isMarried && document.getElementById('o_dis_select').value === 'نعم') ? getCheckValues('dis_wife', '') : "لا يوجد",
+      p_chrWife: (isMarried && document.getElementById('p_chr_select').value === 'نعم') ? getCheckValues('chr_wife', 'p_wife_other') : "لا يوجد",
+      q_pregnant: (isMarried && document.getElementById('q_isPregnant').checked) ? "نعم" : "لا",
+      r_nursing: (isMarried && document.getElementById('r_isNursing').checked) ? "نعم" : "لا",
+      s_uni: document.getElementById('s_uniStudents').value,
+      children: childrenEntries
+    };
+
+    try {
+      progress.style.width = '60%';
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(updateDataPayload)
+      });
+      const result = await response.json();
+      if (result.status === "success") {
+        progress.style.width = '100%';
+        location.reload(); // إعادة التحميل للعودة لوضع الاستعلام
+      } else { alert("❌ خطأ: " + result.message); overlay.style.display = 'none'; }
+    } catch (e) { alert("❌ خطأ في الاتصال بالسيرفر."); overlay.style.display = 'none'; }
+  }
+</script>
+</body>
+</html>
