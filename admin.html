@@ -4,508 +4,433 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة الإدارة - مخيم الهلال الجنوبي -كنعان-</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <title>بيانات مخيم الهلال الجنوبي -كنعان-</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-
   <style>
-    :root {
-      --primary: #0b5a84;
-      --primary-light: #e6f2f8;
-      --accent: #b8dfaf;
-      --bg: #f5f5f5;
-      --card-bg: #ffffff;
-      --text: #222;
-      --muted: #777;
-      --danger: #b3261e;
-    }
-
+    :root { --primary: #0b5a84; --bg: #f5f5f5; --card-bg: #ffffff; --text: #222; --muted: #777; --success: #28a745; --danger: #d93025; }
     * { box-sizing: border-box; }
-
-    body {
-      font-family: "Cairo", system-ui, -apple-system, "Segoe UI", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: var(--bg);
-      color: var(--text);
-      direction: rtl;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    header.site-header {
-      background-color: #ffffff;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-      position: static;
-      top: 0;
-      z-index: 10;
-    }
-
-    .header-top {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 16px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .header-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .header-logo img {
-      height: 80px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    .header-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    nav.main-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 8px 16px;
-    }
-
-    nav.main-nav a {
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 0.9rem;
-      color: var(--primary);
-      background-color: transparent;
-      border: 1px solid transparent;
-      cursor: pointer;
-    }
-
-    nav.main-nav a:hover {
-      background-color: var(--primary-light);
-    }
-
-    nav.main-nav a.active {
-      background-color: var(--primary);
-      color: #ffffff;
-      border-color: var(--primary);
-      font-weight: 600;
-    }
-
-    main {
-      max-width: 800px;
-      margin: 24px auto 40px;
-      padding: 0 16px;
-    }
-
-    .view { display: none; animation: fadeIn 0.3s ease; }
-    .view.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    .admin-card { 
-      background: var(--card-bg); 
-      border-radius: 16px; 
-      padding: 25px; 
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08); 
-      border-top: 4px solid var(--primary); 
-      text-align: center; 
-    }
+    body { font-family: "Cairo", sans-serif; margin: 0; background: var(--bg); color: var(--text); direction: rtl; }
+    header.site-header { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .header-top { display: flex; align-items: center; gap: 10px; padding: 8px 16px; border-bottom: 1px solid #eee; }
+    .header-logo img { height: 80px; }
+    .header-title { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+    nav.main-nav { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 16px; }
+    nav.main-nav a { padding: 6px 10px; border-radius: 999px; font-size: 0.9rem; color: var(--primary); text-decoration: none; }
+    nav.main-nav a.active { background: var(--primary); color: #fff; font-weight: 600; }
+    main { max-width: 800px; margin: 24px auto; padding: 0 16px; }
+    .update-card { background: var(--card-bg); border-radius: 16px; padding: 20px; border-top: 4px solid var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    fieldset { border: 1px solid #eee; border-radius: 12px; padding: 15px; margin-bottom: 20px; background: #fafafa; position: relative; }
+    legend { color: var(--primary); font-weight: 700; padding: 0 10px; }
+    label { display: block; font-size: 0.85rem; margin-top: 10px; font-weight: 600; color: var(--muted); }
+    input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-top: 5px; font-family: inherit; transition: 0.3s; }
+    input:disabled, select:disabled { background: #f9f9f9; border-color: transparent; color: #000; cursor: default; -webkit-appearance: none; }
+    .checkbox-group { display: none; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin-top: 8px; }
+    .checkbox-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 0.85rem; }
+    .checkbox-item input { width: auto; margin: 0; }
     
-    .form-group { text-align: right; margin-bottom: 15px; }
-    label { display: block; font-size: 0.9rem; margin-bottom: 5px; font-weight: 600; }
-    input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-family: inherit; box-sizing: border-box; }
-    input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(11,90,132,0.1); }
-    
-    .btn { width: 100%; padding: 12px; border-radius: 999px; border: none; cursor: pointer; font-weight: 600; transition: 0.3s; margin-top: 10px; }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-outline { border: 1px solid var(--primary); color: var(--primary); background: transparent; }
-    .btn:disabled { background: #ccc; cursor: not-allowed; }
+    .status-badge { display: none; padding: 5px 12px; border-radius: 5px; font-size: 0.85rem; font-weight: bold; margin-top: 10px; }
+    .view-mode .status-badge.active { display: inline-flex; align-items: center; gap: 5px; background: #e8f5e9; color: var(--success); border: 1px solid var(--success); }
+    .view-mode .status-badge.inactive { display: inline-flex; background: #f5f5f5; color: #999; border: 1px solid #ddd; text-decoration: line-through; opacity: 0.6; }
+    .view-mode #pregnancyContainer label { display: none; }
 
-    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-    .menu-item { padding: 20px; border: 1px solid #eee; border-radius: 12px; cursor: pointer; transition: 0.2s; background: #fff; }
-    .menu-item:hover { background: var(--primary-light); border-color: var(--primary); }
+    .btn-save { background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 999px; width: 100%; font-weight: 700; cursor: pointer; margin-top: 20px; display: none; }
+    .btn-edit { background: var(--success); color: #fff; border: none; padding: 14px; border-radius: 999px; width: 100%; font-weight: 700; cursor: pointer; margin-top: 20px; display: none; }
+    footer { text-align: center; font-size: 0.8rem; color: #fff; background: var(--primary); padding: 10px; margin-top: 30px; }
 
-    .status-msg { margin-top: 15px; font-size: 0.85rem; min-height: 20px; }
-    
-    .result-item { text-align: right; padding: 12px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
-    .result-item:hover { background: var(--primary-light); border-color: var(--primary); }
-
-    footer.site-footer {
-      text-align: center;
-      font-size: 0.8rem;
-      color: #ffffff;
-      background-color: var(--primary);
-      padding: 8px;
-      margin-top: 24px;
+    #loadingOverlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.9); display: none; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 1000;
     }
-
-    @media (max-width: 480px) {
-      .menu-grid { grid-template-columns: 1fr; }
-    }
+    .loader-bar { width: 200px; height: 4px; background: #eee; border-radius: 10px; overflow: hidden; margin-top: 15px; }
+    .loader-progress { width: 0%; height: 100%; background: var(--primary); transition: width 0.3s; }
+    
+    .view-mode .checkbox-item:has(input:not(:checked)) { display: none; }
+    .view-mode .checkbox-group { border: none; padding: 0; }
+    
+    /* ستايل لرسالة التنبيه الخاصة بالحقول الإجبارية */
+    .field-hint { font-size: 0.75rem; color: var(--danger); font-weight: normal; margin-top: 2px; display: block; }
   </style>
 </head>
-<body>
+<body class="view-mode">
 
-  <header class="site-header">
-    <div class="header-top">
-      <div class="header-logo">
-        <img src="LOGO.png" class="logo" alt="مخيم الهلال الجنوبي -كنعان-休">
-        <div class="header-title">مخيم الهلال الجنوبي -كنعان-</div>
-      </div>
+<div id="loadingOverlay">
+  <div class="header-title" id="statusText">جاري معالجة البيانات...</div>
+  <div class="loader-bar"><div class="loader-progress" id="loaderProgress"></div></div>
+</div>
+
+<header class="site-header">
+  <div class="header-top">
+    <div class="header-logo"><img src="LOGO.png" alt="Logo"></div>
+    <div class="header-title">مخيم الهلال الجنوبي -كنعان-</div>
+  </div>
+  <nav class="main-nav">
+    <a href="index.html">الصفحة الرئيسية</a>
+    <a href="events.html">آخر الفعاليات</a>
+    <a href="admins.html">أعضاء الإدارة</a>
+    <a href="services.html" class="active">الخدمات الإلكترونية</a>
+    <a href="gallery.html">ألبوم الصور</a>
+    <a href="map.html">الخريطة التفاعلية</a>
+    <a href="admin.html">خدمات الإدارة</a>
+    <a href="stats.html">إحصائيات المخيم</a>
+  </nav>
+</header>
+
+<main>
+  <div class="update-card">
+    <h3 id="pageTitle" style="text-align:center; color:var(--primary)">بيانات الأسرة المسجلة</h3>
+    
+    <div id="editNotice" style="text-align: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+      <p style="font-size: 0.9rem; color: var(--danger); font-weight: bold; margin-bottom: 10px;">في حال كانت البيانات خطأ اضغط على زر تعديل البيانات</p>
+      <button type="button" id="editBtn" class="btn-edit" onclick="enableEditMode()" style="margin-top: 0; display: none;">تعديل البيانات</button>
     </div>
-    <nav class="main-nav">
-      <a href="index.html">الصفحة الرئيسية</a>
-      <a href="events.html">آخر الفعاليات</a>
-      <a href="admins.html">أعضاء الإدارة</a>
-      <a href="services.html">الخدمات الإلكترونية</a>
-      <a href="gallery.html">ألبوم الصور</a>
-      <a href="map.html">الخريطة التفاعلية</a>
-      <a href="admin.html" class="active">خدمات الإدارة</a>
-      <a href="stats.html">إحصائيات المخيم</a>
-    </nav>
-  </header>
 
-  <main>
-    <section id="loginView" class="view active">
-      <div class="admin-card">
-        <img src="LOGO.png" style="width: 180px; margin-bottom: 15px;" alt="Logo">
-        <h3>دخول الإدارة</h3>
-        <p class="muted">يرجى إدخال بيانات الاعتماد للوصول للصلاحيات</p>
-        <div class="form-group">
-          <label>اسم المستخدم</label>
-          <input type="text" id="user" placeholder="أدخل الاسم">
-        </div>
-        <div class="form-group">
-          <label>كلمة المرور</label>
-          <input type="password" id="pass" placeholder="••••••••">
-        </div>
-        <button class="btn btn-primary" onclick="handleLogin()">تسجيل الدخول</button>
-        <div id="loginMsg" class="status-msg"></div>
-      </div>
-    </section>
-
-    <section id="dashboardView" class="view">
-      <div class="admin-card">
-        <h3>مرحباً، <span id="adminName">...</span></h3>
-        <p id="permissionTag" class="muted"></p>
+    <form id="fullUpdateForm" onsubmit="handleDataUpdate(event)">
+      
+      <fieldset>
+        <legend>بيانات رب الأسرة</legend>
+        <label>تاريخ ميلاد رب الأسرة (K)</label>
+        <input type="date" id="k_dobHead" required disabled>
         
-        <div class="menu-grid">
-          <div class="menu-item" onclick="showView('searchView')">
-            <strong>🔍 استعلام وتعديل</strong>
-            <p style="font-size: 0.75rem; margin-top:5px;">البحث عن فرد وتعديل بياناته</p>
-          </div>
-          <div id="addOption" class="menu-item" onclick="showView('addView')">
-            <strong>➕ إضافة عائلة</strong>
-            <p style="font-size: 0.75rem; margin-top:5px;">إضافة بيانات جديدة للشيت</p>
-          </div>
+        <label>هل يوجد إعاقة لرب الأسرة؟ (L)</label>
+        <select id="l_dis_select" onchange="toggleBox(this, 'l_dis_box')" disabled>
+          <option value="لا">لا</option><option value="نعم">نعم</option>
+        </select>
+        <div id="l_dis_box" class="checkbox-group">
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="حركية"> حركية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="حسية"> حسية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="بصرية"> بصرية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="سمعية"> سمعية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="بتر"> بتر</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="ذهنية"> ذهنية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="نفسية"> نفسية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="أخرى" onchange="toggleOtherInput(this, 'l_head_dis_other')"> أخرى</div>
+          <input type="text" id="l_head_dis_other" placeholder="اكتب الإعاقة الأخرى" style="display:none; margin-top:5px;" disabled>
         </div>
-        <button class="btn btn-outline" style="width: auto; padding: 5px 20px; margin-top: 20px;" onclick="location.reload()">تسجيل خروج</button>
-      </div>
-    </section>
 
-    <section id="searchView" class="view">
-      <div class="admin-card">
-        <h3>البحث والتعديل</h3>
-        <div class="form-group">
-          <label>ابحث بالاسم أو رقم الهوية</label>
-          <input type="text" id="searchKey" placeholder="مثال: أحمد أو 402...">
-          <div style="display: flex; gap: 10px; margin-top: 10px;">
-            <button class="btn btn-primary" id="searchBtn" onclick="searchPerson()">بحث في النظام</button>
-            <button class="btn btn-outline" onclick="showView('dashboardView')">رجوع</button>
-          </div>
+        <label>هل يوجد أمراض مزمنة لرب الأسرة؟ (M)</label>
+        <select id="m_chr_select" onchange="toggleBox(this, 'm_chr_box')" disabled>
+          <option value="لا">لا</option><option value="نعم">نعم</option>
+        </select>
+        <div id="m_chr_box" class="checkbox-group">
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="ضغط"> ضغط</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="سكر"> سكر</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="قلب"> أمراض القلب</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="تنفسي"> جهاز تنفسي</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="كلى"> فشل كلوي</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="سرطان"> أورام</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_head" value="أخرى" onchange="toggleOtherInput(this, 'm_head_other')"> أخرى</div>
+          <input type="text" id="m_head_other" placeholder="اكتب المرض الآخر" style="display:none; margin-top:5px;" disabled>
         </div>
+      </fieldset>
+
+      <fieldset id="wifeSection" style="display:none;">
+        <legend>بيانات الزوجة</legend>
+        <label>تاريخ ميلاد الزوجة (N)</label>
+        <input type="date" id="n_dobWife" disabled>
         
-        <div id="searchResultsContainer" style="display: none; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px;">
-           <p class="muted" style="text-align: right;">نتائج البحث (اختر العائلة المطلوبة):</p>
-          <div id="loadingDetailsMsg" class="status-msg" style="color: orange; text-align: center; display: none;">⏳ جاري تحميل بيانات العائلة...</div>
-           <div id="resultsList"></div>
+        <label>هل يوجد إعاقة للزوجة؟ (O)</label>
+        <select id="o_dis_select" onchange="toggleBox(this, 'o_dis_box')" disabled>
+          <option value="لا">لا</option><option value="نعم">نعم</option>
+        </select>
+        <div id="o_dis_box" class="checkbox-group">
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="حركية"> حركية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="حسية"> حسية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="بصرية"> بصرية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="سمعية"> سمعية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="بتر"> بتر</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="ذهنية"> ذهنية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="نفسية"> نفسية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="أخرى" onchange="toggleOtherInput(this, 'o_wife_dis_other')"> أخرى</div>
+          <input type="text" id="o_wife_dis_other" placeholder="اكتب الإعاقة الأخرى" style="display:none; margin-top:5px;" disabled>
         </div>
 
-        <div id="editForm" style="display: none; border-top: 2px solid var(--primary-light); padding-top: 20px; margin-top: 20px;">
-          <h4 id="editHeader" style="color: var(--primary); text-align: right;">تعديل بيانات العائلة</h4>
-          <div class="form-group"><label>اسم رب الأسرة</label><input type="text" id="editName"></div>
-          <div class="form-group"><label>رقم الهوية</label><input type="text" id="editNid"></div>
-          <div class="form-group"><label>رقم التواصل</label><input type="text" id="editPhone"></div>
-          <div class="form-group"><label>اسم الزوجة</label><input type="text" id="editWifeName"></div>
-          <div class="form-group"><label>هوية الزوجة</label><input type="text" id="editWifeNid"></div>
-          <div class="form-group"><label>عدد الأفراد</label><input type="number" id="editCount"></div>
-          <div class="form-group"><label>السكن الأصلي</label><input type="text" id="editAddress"></div>
-          <div class="form-group">
-            <label>العمارة</label>
-            <select id="editBuilding"><option value="">جاري تحميل القائمة...</option></select>
-          </div>
-          <div class="form-group">
-            <label>الحالة الاجتماعية</label>
-            <select id="editSocialStatus"><option value="">جاري تحميل القائمة...</option></select>
-          </div>
+        <label>هل يوجد أمراض مزمنة للزوجة؟ (P)</label>
+        <select id="p_chr_select" onchange="toggleBox(this, 'p_chr_box')" disabled>
+          <option value="لا">لا</option><option value="نعم">نعم</option>
+        </select>
+        <div id="p_chr_box" class="checkbox-group">
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="ضغط"> ضغط</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="سكر"> سكر</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="قلب"> أمراض القلب</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="تنفسي"> جهاز تنفسي</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="كلى"> فشل كلوي</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="سرطان"> أورام</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_wife" value="أخرى" onchange="toggleOtherInput(this, 'p_wife_other')"> أخرى</div>
+          <input type="text" id="p_wife_other" placeholder="اكتب المرض الآخر" style="display:none; margin-top:5px;" disabled>
+        </div>
+
+        <div id="pregnancyContainer" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+          <label style="display:inline;"><input type="checkbox" id="q_isPregnant" onchange="updateBadges()" disabled> الزوجة حامل (Q)</label>
+          <label style="display:inline;"><input type="checkbox" id="r_isNursing" onchange="updateBadges()" disabled> الزوجة مرضعة (R)</label>
           
-          <button id="saveBtn" class="btn btn-primary" onclick="saveEdit()">حفظ التعديلات</button>
-          <button class="btn btn-outline" onclick="hideEditForm()">إلغاء</button>
-          <div id="editMsg" class="status-msg"></div>
+          <span id="badgePregnant" class="status-badge">الزوجة حامل</span>
+          <span id="badgeNursing" class="status-badge">الزوجة مرضعة</span>
         </div>
-      </div>
-    </section>
+      </fieldset>
 
-    <section id="addView" class="view">
-      <div class="admin-card">
-        <h3>إضافة عائلة جديدة</h3>
-        <p class="muted">سيتم إضافة البيانات في سطر جديد تلقائياً</p>
-        
-        <div class="form-group"><label>اسم رب الأسرة</label><input type="text" id="newName"></div>
-        <div class="form-group"><label>رقم الهوية</label><input type="text" id="newNid"></div>
-        <div class="form-group"><label>رقم التواصل</label><input type="text" id="newPhone"></div>
-        <div class="form-group"><label>اسم الزوجة</label><input type="text" id="newWifeName"></div>
-        <div class="form-group"><label>هوية الزوجة</label><input type="text" id="newWifeNid"></div>
-        <div class="form-group"><label>عدد الأفراد</label><input type="number" id="newCount"></div>
-        <div class="form-group"><label>السكن الأصلي</label><input type="text" id="newAddress"></div>
-        <div class="form-group">
-          <label>العمارة</label>
-          <select id="newBuilding"><option value="">جاري تحميل القائمة...</option></select>
-        </div>
-        <div class="form-group">
-          <label>الحالة الاجتماعية</label>
-          <select id="newSocialStatus"><option value="">جاري تحميل القائمة...</option></select>
-        </div>
-        
-        <button class="btn btn-primary" id="addBtn" onclick="addNew()">إضافة للنظام</button>
-        <button class="btn btn-outline" onclick="showView('dashboardView')">إلغاء والعودة</button>
-        <div id="addMsg" class="status-msg"></div>
-      </div>
-    </section>
-  </main>
+      <fieldset>
+        <legend>التعليم</legend>
+        <label>هل لديك طلاب جامعيين في الأسرة؟ (S)</label>
+        <select id="s_uniStudents" disabled><option value="لا">لا</option><option value="نعم">نعم</option></select>
+      </fieldset>
 
-  <footer class="site-footer">
-    جميع الحقوق محفوظة &copy; مخيم الهلال الجنوبي -كنعان-  &copy;  تصميم م. أحمد ماضي 
-  </footer>
+      <div id="childrenContainer"></div>
+
+      <button type="submit" id="saveBtn" class="btn-save">حفظ كافة التعديلات</button>
+      
+      <button type="button" onclick="window.location.href='services.html'" style="background:none; border:none; color:var(--muted); width:100%; margin-top:10px; cursor:pointer;">العودة للخلف</button>
+    </form>
+  </div>
+</main>
+
+<footer> جميع الحقوق محفوظة &copy; مخيم الهلال الجنوبي -كنعان- </footer>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzG2YdQLdwIU49wtQ59fiCm-Qk8Z6nOLE3-VFJ1tqFON8Sjt0JZTIyaYtS99rCUd-ia/exec";
-    let currentUser = null;
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzG2YdQLdwIU49wtQ59fiCm-Qk8Z6nOLE3-VFJ1tqFON8Sjt0JZTIyaYtS99rCUd-ia/exec";
+  
+  const params = new URLSearchParams(window.location.search);
+  const headNid = params.get('nid');
+  const socialStatus = params.get('social') || "";
+  const totalMembers = parseInt(params.get('count')) || 0;
 
-    // دالة محسنة لجلب القوائم المنسدلة (العمارات والحالة الاجتماعية)
-    async function fetchOptionsFromServer() {
-      try {
-        const response = await fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "getBuildings" }) // ملاحظة: السكربت يرجع كلاهما في هذا الأكشن المعدل
-        });
-        const result = await response.json();
-        
-        // تعبئة العمارات
-        let bOptions = '<option value="">-- اختر العمارة (اختياري) --</option>';
-        if (result.status === "success" && result.buildings.length > 0) {
-          bOptions += result.buildings.map(opt => `<option value="${opt}">${opt}</option>`).join('');
-        }
-        document.getElementById('editBuilding').innerHTML = bOptions;
-        document.getElementById('newBuilding').innerHTML = bOptions;
+  const isMarried = (socialStatus.includes("متزوج") || socialStatus === "");
+  if (isMarried) document.getElementById('wifeSection').style.display = "block";
 
-        // تعبئة الحالة الاجتماعية
-        let sOptions = '<option value="">-- اختر الحالة الاجتماعية --</option>';
-        if (result.status === "success" && result.socialStatuses && result.socialStatuses.length > 0) {
-          sOptions += result.socialStatuses.map(opt => `<option value="${opt}">${opt}</option>`).join('');
-        }
-        document.getElementById('editSocialStatus').innerHTML = sOptions;
-        document.getElementById('newSocialStatus').innerHTML = sOptions;
+  let childrenNeeded = isMarried ? (totalMembers - 2) : (totalMembers - 1);
+  if (childrenNeeded < 0) childrenNeeded = 0;
+  
+  const container = document.getElementById('childrenContainer');
+  for (let i = 1; i <= childrenNeeded; i++) {
+    container.innerHTML += `
+      <fieldset>
+        <legend>بيانات الابن/الابنة (${i})</legend>
+        <label>الاسم رباعي</label><input type="text" class="c-name" required disabled>
+        <label>الصلة</label><select class="c-rel" disabled><option value="ابن">ابن</option><option value="ابنة">ابنة</option></select>
+        <label>رقم الهوية</label>
+        <input type="text" class="c-nid" required disabled pattern="[0-9]{9}" title="يجب إدخال رقم هوية صحيح يتكون من 9 أرقام" maxlength="9" oninput="validateNid(this)">
+        <span class="field-hint">* رقم الهوية إجباري (9 أرقام)</span>
+        <label>تاريخ الميلاد</label><input type="date" class="c-dob" disabled>
+        <label>هل يوجد إعاقة؟</label>
+        <select class="c-dis" onchange="toggleBox(this, 'c_dis_box_${i}')" disabled>
+          <option value="لا">لا</option><option value="نعم">نعم</option>
+        </select>
+        <div id="c_dis_box_${i}" class="checkbox-group">
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="حركية"> حركية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="حسية"> حسية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="بصرية"> بصرية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="سمعية"> سمعية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="بتر"> بتر</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="ذهنية"> ذهنية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="نفسية"> نفسية</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="أخرى" onchange="toggleOtherInput(this, 'c_dis_other_${i}')"> أخرى</div>
+          <input type="text" id="c_dis_other_${i}" placeholder="اكتب الإعاقة الأخرى" style="display:none; margin-top:5px;" disabled>
+        </div>
+        <label>هل يوجد أمراض مزمنة؟</label>
+        <select class="c-chr" onchange="toggleBox(this, 'c_chr_box_${i}')" disabled>
+          <option value="لا">لا</option><option value="نعم">نعم</option>
+        </select>
+        <div id="c_chr_box_${i}" class="checkbox-group">
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="ضغط"> ضغط</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="سكر"> سكر</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="قلب"> أمراض القلب</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="تنفسي"> جهاز تنفسي</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="كلى"> فشل كلوي</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="سرطان"> أورام</div>
+          <div class="checkbox-item"><input type="checkbox" name="chr_child_${i}" value="أخرى" onchange="toggleOtherInput(this, 'c_chr_other_${i}')"> أخرى</div>
+          <input type="text" id="c_chr_other_${i}" placeholder="اكتب المرض الآخر" style="display:none; margin-top:5px;" disabled>
+        </div>
+      </fieldset>`;
+  }
 
-        return true;
-      } catch (e) {
-        console.error("خطأ في جلب البيانات:", e);
-        return false;
-      }
+  // وظيفة لمنع إدخال غير الأرقام في حقل الهوية
+  function validateNid(input) {
+    input.value = input.value.replace(/[^0-9]/g, '');
+    if (input.value.length > 9) {
+      input.value = input.value.slice(0, 9);
     }
+  }
 
-    function showView(viewId) {
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.getElementById(viewId).classList.add('active');
-      resetAllInputs();
-      document.getElementById('editForm').style.display = 'none';
-      document.getElementById('searchResultsContainer').style.display = 'none';
-      if (viewId === 'addView' || viewId === 'searchView') {
-        fetchOptionsFromServer();
-      }
-    }
+  window.onload = async function() {
+    if (!headNid) return;
+    const overlay = document.getElementById('loadingOverlay');
+    overlay.style.display = 'flex';
 
-    function resetAllInputs() {
-      document.querySelectorAll('input, select').forEach(input => {
-        if(input.id !== 'user' && input.id !== 'pass') input.value = "";
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: "getResidentData", headNid: headNid })
       });
-    }
+      const res = await response.json();
 
-    function hideEditForm() {
-      document.getElementById('editForm').style.display = 'none';
-      document.getElementById('searchResultsContainer').style.display = 'block';
-    }
+      if (res.status === "success" && res.exists) {
+        const d = res.data;
+        if(d.k_dobHead) document.getElementById('k_dobHead').value = formatDate(d.k_dobHead);
+        setSelectionAndChecks(d.l_disHead, 'l_dis_box', 'dis_head', 'l_head_dis_other');
+        setSelectionAndChecks(d.m_chrHead, 'm_chr_box', 'chr_head', 'm_head_other');
 
-    async function handleLogin() {
-      const user = document.getElementById('user').value.trim();
-      const pass = document.getElementById('pass').value.trim();
-      const msg = document.getElementById('loginMsg');
-      if (!user || !pass) { msg.style.color="red"; msg.innerText = "❌ الحقول مطلوبة"; return; }
-      msg.style.color = "orange";
-      msg.innerText = "⏳ جاري التحقق...";
-      try {
-        const response = await fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "login", username: user, password: pass })
-        });
-        const result = await response.json();
-        if (result.status === "success") {
-          currentUser = { name: result.username, role: result.role };
-          loadDashboard();
-        } else {
-          msg.style.color = "red";
-          msg.innerText = "❌ " + result.message;
+        if (isMarried) {
+          if(d.n_dobWife) document.getElementById('n_dobWife').value = formatDate(d.n_dobWife);
+          setSelectionAndChecks(d.o_disWife, 'o_dis_box', 'dis_wife', 'o_wife_dis_other');
+          setSelectionAndChecks(d.p_chrWife, 'p_chr_box', 'chr_wife', 'p_wife_other');
+          document.getElementById('q_isPregnant').checked = (d.q_pregnant === "نعم");
+          document.getElementById('r_isNursing').checked = (d.r_nursing === "نعم");
+          updateBadges();
         }
-      } catch (e) { msg.innerText = "❌ خطأ في الاتصال"; }
-    }
+        document.getElementById('s_uniStudents').value = d.s_uni || "لا";
 
-    function loadDashboard() {
-      document.getElementById('adminName').innerText = currentUser.name;
-      let roles = { "admin": "مدير نظام", "editor": "محرر بيانات", "viewer": "مستعرض" };
-      document.getElementById('permissionTag').innerText = "الصلاحية: " + (roles[currentUser.role] || "غير محدد");
-      const addBtn = document.getElementById('addOption');
-      if (currentUser.role === "viewer") {
-        addBtn.style.opacity = "0.5";
-        addBtn.onclick = () => alert("لا تملك صلاحية الإضافة");
+        const childFieldsets = document.querySelectorAll('#childrenContainer fieldset');
+        d.children.forEach((c, idx) => {
+          if (childFieldsets[idx]) {
+            const f = childFieldsets[idx];
+            f.querySelector('.c-name').value = c.name || "";
+            f.querySelector('.c-rel').value = c.rel || "ابن";
+            f.querySelector('.c-nid').value = c.nid || "";
+            if(c.dob) f.querySelector('.c-dob').value = formatDate(c.dob);
+            const i = idx + 1;
+            setSelectionAndChecks(c.dis, `c_dis_box_${i}`, `dis_child_${i}`, `c_dis_other_${i}`);
+            setSelectionAndChecks(c.chr, `c_chr_box_${i}`, `chr_child_${i}`, `c_chr_other_${i}`);
+          }
+        });
+
+        document.getElementById('editBtn').style.display = "block";
+      } else {
+        enableEditMode();
       }
-      showView('dashboardView');
+    } catch (e) { enableEditMode(); }
+    overlay.style.display = 'none';
+  };
+
+  function updateBadges() {
+    const isPregnant = document.getElementById('q_isPregnant').checked;
+    const isNursing = document.getElementById('r_isNursing').checked;
+    
+    const bPreg = document.getElementById('badgePregnant');
+    const bNurs = document.getElementById('badgeNursing');
+
+    if (isPregnant) {
+      bPreg.className = "status-badge active";
+      bPreg.innerHTML = "✅ الزوجة حامل (Q)";
+    } else {
+      bPreg.className = "status-badge inactive";
+      bPreg.innerHTML = "الزوجة غير حامل";
     }
 
-    async function searchPerson() {
-      const query = document.getElementById('searchKey').value.trim();
-      const btn = document.getElementById('searchBtn');
-      const container = document.getElementById('searchResultsContainer');
-      const list = document.getElementById('resultsList');
-      if (!query) return alert("أدخل اسم أو هوية");
-      btn.disabled = true;
-      btn.innerText = "🔍 جاري البحث...";
-      document.getElementById('editForm').style.display = 'none';
-      container.style.display = 'none';
-      try {
-        const response = await fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "search", query: query })
-        });
-        const result = await response.json();
-        if (result.status === "success" && result.results.length > 0) {
-          list.innerHTML = "";
-          result.results.forEach(person => {
-            const item = document.createElement('div');
-            item.className = "result-item";
-            item.innerHTML = `<strong>${person.name}</strong> <br> <small>الهوية: ${person.nid} | الحالة: ${person.socialStatus || 'غير محدد'}</small>`;
-            item.onclick = () => populateEditForm(person);
-            list.appendChild(item);
-          });
-          container.style.display = 'block';
-        } else {
-          alert("لم يتم العثور على نتائج");
-        }
-      } catch (e) { alert("خطأ في جلب البيانات"); }
-      btn.disabled = false;
-      btn.innerText = "بحث في النظام";
+    if (isNursing) {
+      bNurs.className = "status-badge active";
+      bNurs.innerHTML = "✅ الزوجة مرضعة (R)";
+    } else {
+      bNurs.className = "status-badge inactive";
+      bNurs.innerHTML = "الزوجة غير مرضعة";
     }
+  }
 
-    async function populateEditForm(person) {
-      const loadingMsg = document.getElementById('loadingDetailsMsg');
-      if(loadingMsg) loadingMsg.style.display = 'block';
-      
-      document.getElementById('editHeader').innerText = "تعديل بيانات: " + person.name;
-      document.getElementById('editName').value = person.name || "";
-      document.getElementById('editNid').value = person.nid || "";
-      document.getElementById('editPhone').value = person.phone || "";
-      document.getElementById('editWifeName').value = person.wifeName || "";
-      document.getElementById('editWifeNid').value = person.wifeNid || "";
-      document.getElementById('editCount').value = person.count || "";
-      document.getElementById('editAddress').value = person.address || "";
+  function enableEditMode() {
+    document.body.classList.remove('view-mode');
+    document.querySelectorAll('input, select').forEach(el => el.disabled = false);
+    document.getElementById('editNotice').style.display = "none";
+    document.getElementById('saveBtn').style.display = "block";
+    document.getElementById('pageTitle').innerText = "تعديل بيانات الأسرة";
+  }
 
-      await fetchOptionsFromServer();
-      
-      document.getElementById('editBuilding').value = person.building || "";
-      document.getElementById('editSocialStatus').value = person.socialStatus || "";
-      document.getElementById('saveBtn').dataset.row = person.row;
+  function formatDate(dateStr) {
+    if(!dateStr) return "";
+    try {
+      const d = new Date(dateStr);
+      return d.toISOString().split('T')[0];
+    } catch(e) { return ""; }
+  }
 
-      if(loadingMsg) loadingMsg.style.display = 'none';
-      document.getElementById('searchResultsContainer').style.display = 'none';
-      document.getElementById('editForm').style.display = 'block';
+  function setSelectionAndChecks(valStr, boxId, checkName, otherInputId) {
+    if (!valStr || valStr === "لا يوجد" || valStr === "لا") return;
+    const box = document.getElementById(boxId);
+    if(box) {
+      box.style.display = 'block';
+      box.previousElementSibling.value = "نعم";
     }
+    const checks = document.querySelectorAll(`input[name="${checkName}"]`);
+    checks.forEach(ch => {
+      if (valStr.includes(ch.value)) ch.checked = true;
+      if (valStr.includes("أخرى:") && ch.value === "أخرى") {
+         ch.checked = true;
+         if(otherInputId) {
+           const otherInp = document.getElementById(otherInputId);
+           otherInp.style.display = 'block';
+           otherInp.value = valStr.split("أخرى: ")[1];
+         }
+      }
+    });
+  }
 
-    async function saveEdit() {
-      if (currentUser.role === "viewer") return alert("صلاحيتك للمشاهدة فقط");
-      const row = document.getElementById('saveBtn').dataset.row;
-      const msg = document.getElementById('editMsg');
-      const btn = document.getElementById('saveBtn');
-      const updatedData = {
-        row: row,
-        name: document.getElementById('editName').value,
-        nid: document.getElementById('editNid').value,
-        phone: document.getElementById('editPhone').value,
-        wifeName: document.getElementById('editWifeName').value,
-        wifeNid: document.getElementById('editWifeNid').value,
-        count: document.getElementById('editCount').value,
-        address: document.getElementById('editAddress').value,
-        building: document.getElementById('editBuilding').value,
-        socialStatus: document.getElementById('editSocialStatus').value
-      };
-      btn.disabled = true;
-      msg.style.color = "orange";
-      msg.innerText = "⏳ جاري الحفظ...";
-      try {
-        const response = await fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "update", rowData: updatedData, userRole: currentUser.role })
-        });
-        const result = await response.json();
-        if (result.status === "success") {
-          alert("✅ تم التعديل بنجاح");
-          showView('dashboardView');
-        } else { alert("❌ " + result.message); }
-      } catch (e) { alert("خطأ في الاتصال"); }
-      btn.disabled = false;
-      msg.innerText = "";
+  function toggleBox(select, id) { document.getElementById(id).style.display = (select.value === 'نعم' ? 'block' : 'none'); }
+  function toggleOtherInput(cb, id) { document.getElementById(id).style.display = cb.checked ? 'block' : 'none'; }
+  
+  function getCheckValues(name, otherId) {
+    let vals = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(c => c.value);
+    if (vals.includes('أخرى') && otherId && document.getElementById(otherId).value) {
+      vals[vals.indexOf('أخرى')] = "أخرى: " + document.getElementById(otherId).value;
     }
+    return vals.length > 0 ? vals.join(' + ') : 'لا يوجد';
+  }
 
-    async function addNew() {
-      if (currentUser.role === "viewer") return alert("عذراً، لا تملك صلاحية الإضافة");
-      const btn = document.getElementById('addBtn');
-      const msg = document.getElementById('addMsg');
-      const newData = {
-        name: document.getElementById('newName').value.trim(),
-        nid: document.getElementById('newNid').value.trim(),
-        phone: document.getElementById('newPhone').value.trim(),
-        wifeName: document.getElementById('newWifeName').value.trim(),
-        wifeNid: document.getElementById('newWifeNid').value.trim(),
-        count: document.getElementById('newCount').value.trim(),
-        address: document.getElementById('newAddress').value.trim(),
-        building: document.getElementById('newBuilding').value.trim(),
-        socialStatus: document.getElementById('newSocialStatus').value.trim()
-      };
-      if (!newData.name || !newData.nid) { alert("الاسم ورقم الهوية حقول إجبارية"); return; }
-      btn.disabled = true;
-      msg.style.color = "orange";
-      msg.innerText = "⏳ جاري الإضافة للشيت...";
-      try {
-        const response = await fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "add", rowData: newData, userRole: currentUser.role })
-        });
-        const result = await response.json();
-        if (result.status === "success") {
-          alert("✅ تم إضافة العائلة بنجاح");
-          showView('dashboardView');
-        } else { alert("❌ " + result.message); }
-      } catch (e) { alert("❌ حدث خطأ في الاتصال"); } finally {
-        btn.disabled = false;
-        msg.innerText = "";
+  async function handleDataUpdate(event) {
+    event.preventDefault();
+    
+    // إضافي: التحقق اليدوي من صحة أرقام الهوية قبل الإرسال
+    const nids = document.querySelectorAll('.c-nid');
+    for (let input of nids) {
+      if (input.value.length !== 9) {
+        alert("يرجى التأكد من أن جميع أرقام هوية الأبناء تتكون من 9 أرقام.");
+        input.focus();
+        return;
       }
     }
+
+    const overlay = document.getElementById('loadingOverlay');
+    const progress = document.getElementById('loaderProgress');
+    overlay.style.display = 'flex';
+    progress.style.width = '30%';
+
+    const childrenEntries = Array.from(document.querySelectorAll('#childrenContainer fieldset')).map((f, idx) => {
+      const i = idx + 1;
+      return {
+        name: f.querySelector('.c-name').value,
+        rel: f.querySelector('.c-rel').value,
+        nid: f.querySelector('.c-nid').value,
+        dob: f.querySelector('.c-dob').value,
+        dis: (f.querySelector('.c-dis').value === 'نعم') ? getCheckValues(`dis_child_${i}`, `c_dis_other_${i}`) : 'لا يوجد',
+        chr: (f.querySelector('.c-chr').value === 'نعم') ? getCheckValues(`chr_child_${i}`, `c_chr_other_${i}`) : 'لا يوجد'
+      };
+    });
+
+    const updateDataPayload = {
+      action: "updateData", 
+      headNid: headNid,
+      k_dobHead: document.getElementById('k_dobHead').value,
+      l_disHead: (document.getElementById('l_dis_select').value === 'نعم') ? getCheckValues('dis_head', 'l_head_dis_other') : 'لا يوجد',
+      m_chrHead: (document.getElementById('m_chr_select').value === 'نعم') ? getCheckValues('chr_head', 'm_head_other') : 'لا يوجد',
+      n_dobWife: isMarried ? document.getElementById('n_dobWife').value : "",
+      o_disWife: (isMarried && document.getElementById('o_dis_select').value === 'نعم') ? getCheckValues('dis_wife', 'o_wife_dis_other') : "لا يوجد",
+      p_chrWife: (isMarried && document.getElementById('p_chr_select').value === 'نعم') ? getCheckValues('chr_wife', 'p_wife_other') : "لا يوجد",
+      q_pregnant: (isMarried && document.getElementById('q_isPregnant').checked) ? "نعم" : "لا",
+      r_nursing: (isMarried && document.getElementById('r_isNursing').checked) ? "نعم" : "لا",
+      s_uni: document.getElementById('s_uniStudents').value,
+      children: childrenEntries
+    };
+
+    try {
+      progress.style.width = '60%';
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(updateDataPayload)
+      });
+      const result = await response.json();
+      if (result.status === "success") {
+        progress.style.width = '100%';
+        location.reload();
+      } else { alert("❌ خطأ: " + result.message); overlay.style.display = 'none'; }
+    } catch (e) { alert("❌ خطأ في الاتصال بالسيرفر."); overlay.style.display = 'none'; }
+  }
 </script>
 </body>
 </html>
