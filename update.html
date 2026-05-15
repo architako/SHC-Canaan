@@ -28,11 +28,10 @@
     .checkbox-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 0.85rem; }
     .checkbox-item input { width: auto; margin: 0; }
     
-    /* تنسيق خاص لحالة الحامل والمرضعة في وضع الاستعلام */
     .status-badge { display: none; padding: 5px 12px; border-radius: 5px; font-size: 0.85rem; font-weight: bold; margin-top: 10px; }
     .view-mode .status-badge.active { display: inline-flex; align-items: center; gap: 5px; background: #e8f5e9; color: var(--success); border: 1px solid var(--success); }
     .view-mode .status-badge.inactive { display: inline-flex; background: #f5f5f5; color: #999; border: 1px solid #ddd; text-decoration: line-through; opacity: 0.6; }
-    .view-mode #pregnancyContainer label { display: none; } /* إخفاء التشيك بوكس الأصلي في وضع العرض */
+    .view-mode #pregnancyContainer label { display: none; }
 
     .btn-save { background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 999px; width: 100%; font-weight: 700; cursor: pointer; margin-top: 20px; display: none; }
     .btn-edit { background: var(--success); color: #fff; border: none; padding: 14px; border-radius: 999px; width: 100%; font-weight: 700; cursor: pointer; margin-top: 20px; display: none; }
@@ -77,6 +76,12 @@
 <main>
   <div class="update-card">
     <h3 id="pageTitle" style="text-align:center; color:var(--primary)">بيانات الأسرة المسجلة</h3>
+    
+    <div id="editNotice" style="text-align: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+      <p style="font-size: 0.9rem; color: var(--danger); font-weight: bold; margin-bottom: 10px;">في حال كانت البيانات خطأ اضغط على زر تعديل البيانات</p>
+      <button type="button" id="editBtn" class="btn-edit" onclick="enableEditMode()" style="margin-top: 0; display: none;">تعديل البيانات</button>
+    </div>
+
     <form id="fullUpdateForm" onsubmit="handleDataUpdate(event)">
       
       <fieldset>
@@ -96,7 +101,8 @@
           <div class="checkbox-item"><input type="checkbox" name="dis_head" value="بتر"> بتر</div>
           <div class="checkbox-item"><input type="checkbox" name="dis_head" value="ذهنية"> ذهنية</div>
           <div class="checkbox-item"><input type="checkbox" name="dis_head" value="نفسية"> نفسية</div>
-          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="أخرى"> أخرى</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_head" value="أخرى" onchange="toggleOtherInput(this, 'l_head_dis_other')"> أخرى</div>
+          <input type="text" id="l_head_dis_other" placeholder="اكتب الإعاقة الأخرى" style="display:none; margin-top:5px;" disabled>
         </div>
 
         <label>هل يوجد أمراض مزمنة لرب الأسرة؟ (M)</label>
@@ -132,7 +138,8 @@
           <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="بتر"> بتر</div>
           <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="ذهنية"> ذهنية</div>
           <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="نفسية"> نفسية</div>
-          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="أخرى"> أخرى</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_wife" value="أخرى" onchange="toggleOtherInput(this, 'o_wife_dis_other')"> أخرى</div>
+          <input type="text" id="o_wife_dis_other" placeholder="اكتب الإعاقة الأخرى" style="display:none; margin-top:5px;" disabled>
         </div>
 
         <label>هل يوجد أمراض مزمنة للزوجة؟ (P)</label>
@@ -167,7 +174,6 @@
 
       <div id="childrenContainer"></div>
 
-      <button type="button" id="editBtn" class="btn-edit" onclick="enableEditMode()">تعديل البيانات</button>
       <button type="submit" id="saveBtn" class="btn-save">حفظ كافة التعديلات</button>
       
       <button type="button" onclick="window.location.href='services.html'" style="background:none; border:none; color:var(--muted); width:100%; margin-top:10px; cursor:pointer;">العودة للخلف</button>
@@ -212,7 +218,8 @@
           <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="بتر"> بتر</div>
           <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="ذهنية"> ذهنية</div>
           <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="نفسية"> نفسية</div>
-          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="أخرى"> أخرى</div>
+          <div class="checkbox-item"><input type="checkbox" name="dis_child_${i}" value="أخرى" onchange="toggleOtherInput(this, 'c_dis_other_${i}')"> أخرى</div>
+          <input type="text" id="c_dis_other_${i}" placeholder="اكتب الإعاقة الأخرى" style="display:none; margin-top:5px;" disabled>
         </div>
         <label>هل يوجد أمراض مزمنة؟</label>
         <select class="c-chr" onchange="toggleBox(this, 'c_chr_box_${i}')" disabled>
@@ -246,16 +253,16 @@
       if (res.status === "success" && res.exists) {
         const d = res.data;
         if(d.k_dobHead) document.getElementById('k_dobHead').value = formatDate(d.k_dobHead);
-        setSelectionAndChecks(d.l_disHead, 'l_dis_box', 'dis_head');
+        setSelectionAndChecks(d.l_disHead, 'l_dis_box', 'dis_head', 'l_head_dis_other');
         setSelectionAndChecks(d.m_chrHead, 'm_chr_box', 'chr_head', 'm_head_other');
 
         if (isMarried) {
           if(d.n_dobWife) document.getElementById('n_dobWife').value = formatDate(d.n_dobWife);
-          setSelectionAndChecks(d.o_disWife, 'o_dis_box', 'dis_wife');
+          setSelectionAndChecks(d.o_disWife, 'o_dis_box', 'dis_wife', 'o_wife_dis_other');
           setSelectionAndChecks(d.p_chrWife, 'p_chr_box', 'chr_wife', 'p_wife_other');
           document.getElementById('q_isPregnant').checked = (d.q_pregnant === "نعم");
           document.getElementById('r_isNursing').checked = (d.r_nursing === "نعم");
-          updateBadges(); // تحديث شكل البادجات
+          updateBadges();
         }
         document.getElementById('s_uniStudents').value = d.s_uni || "لا";
 
@@ -268,7 +275,7 @@
             f.querySelector('.c-nid').value = c.nid || "";
             if(c.dob) f.querySelector('.c-dob').value = formatDate(c.dob);
             const i = idx + 1;
-            setSelectionAndChecks(c.dis, `c_dis_box_${i}`, `dis_child_${i}`);
+            setSelectionAndChecks(c.dis, `c_dis_box_${i}`, `dis_child_${i}`, `c_dis_other_${i}`);
             setSelectionAndChecks(c.chr, `c_chr_box_${i}`, `chr_child_${i}`, `c_chr_other_${i}`);
           }
         });
@@ -281,7 +288,6 @@
     overlay.style.display = 'none';
   };
 
-  // دالة لتحديث شكل البادجات (حامل/مرضعة) في وضع الاستعلام
   function updateBadges() {
     const isPregnant = document.getElementById('q_isPregnant').checked;
     const isNursing = document.getElementById('r_isNursing').checked;
@@ -309,7 +315,7 @@
   function enableEditMode() {
     document.body.classList.remove('view-mode');
     document.querySelectorAll('input, select').forEach(el => el.disabled = false);
-    document.getElementById('editBtn').style.display = "none";
+    document.getElementById('editNotice').style.display = "none";
     document.getElementById('saveBtn').style.display = "block";
     document.getElementById('pageTitle').innerText = "تعديل بيانات الأسرة";
   }
@@ -368,7 +374,7 @@
         rel: f.querySelector('.c-rel').value,
         nid: f.querySelector('.c-nid').value,
         dob: f.querySelector('.c-dob').value,
-        dis: (f.querySelector('.c-dis').value === 'نعم') ? getCheckValues(`dis_child_${i}`, '') : 'لا يوجد',
+        dis: (f.querySelector('.c-dis').value === 'نعم') ? getCheckValues(`dis_child_${i}`, `c_dis_other_${i}`) : 'لا يوجد',
         chr: (f.querySelector('.c-chr').value === 'نعم') ? getCheckValues(`chr_child_${i}`, `c_chr_other_${i}`) : 'لا يوجد'
       };
     });
@@ -377,10 +383,10 @@
       action: "updateData", 
       headNid: headNid,
       k_dobHead: document.getElementById('k_dobHead').value,
-      l_disHead: (document.getElementById('l_dis_select').value === 'نعم') ? getCheckValues('dis_head', '') : 'لا يوجد',
+      l_disHead: (document.getElementById('l_dis_select').value === 'نعم') ? getCheckValues('dis_head', 'l_head_dis_other') : 'لا يوجد',
       m_chrHead: (document.getElementById('m_chr_select').value === 'نعم') ? getCheckValues('chr_head', 'm_head_other') : 'لا يوجد',
       n_dobWife: isMarried ? document.getElementById('n_dobWife').value : "",
-      o_disWife: (isMarried && document.getElementById('o_dis_select').value === 'نعم') ? getCheckValues('dis_wife', '') : "لا يوجد",
+      o_disWife: (isMarried && document.getElementById('o_dis_select').value === 'نعم') ? getCheckValues('dis_wife', 'o_wife_dis_other') : "لا يوجد",
       p_chrWife: (isMarried && document.getElementById('p_chr_select').value === 'نعم') ? getCheckValues('chr_wife', 'p_wife_other') : "لا يوجد",
       q_pregnant: (isMarried && document.getElementById('q_isPregnant').checked) ? "نعم" : "لا",
       r_nursing: (isMarried && document.getElementById('r_isNursing').checked) ? "نعم" : "لا",
@@ -397,7 +403,7 @@
       const result = await response.json();
       if (result.status === "success") {
         progress.style.width = '100%';
-        location.reload(); // إعادة التحميل للعودة لوضع الاستعلام
+        location.reload();
       } else { alert("❌ خطأ: " + result.message); overlay.style.display = 'none'; }
     } catch (e) { alert("❌ خطأ في الاتصال بالسيرفر."); overlay.style.display = 'none'; }
   }
