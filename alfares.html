@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الاستعلام عن طرد الفارس الشهم - مخيم الهلال الجنوبي -بانياس-</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght=400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0b5a84;
+      --primary-light: #e6f2f8;
+      --accent: #b8dfaf;
+      --bg: #f5f5f5;
+      --card-bg: #ffffff;
+      --text: #222;
+      --muted: #777;
+      --success: #28a745;
+      --danger: #b3261e;
+      --warning: #f57c00;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: "Cairo", system-ui, -apple-system, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      direction: rtl;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    header.site-header {
+      background-color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      position: static;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo img { height: 80px; width: auto; object-fit: contain; }
+    .header-title { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+
+    nav.main-nav { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 16px; }
+    nav.main-nav a {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      border: 1px solid transparent;
+    }
+    nav.main-nav a:hover { background-color: var(--primary-light); }
+    nav.main-nav a.active {
+      background-color: var(--primary);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    main { max-width: 1100px; margin: 24px auto 40px; padding: 0 16px; }
+
+    .result-wrapper { display: flex; justify-content: center; }
+    .result-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      padding: 24px 20px;
+      width: 100%;
+      max-width: 550px;
+      border-top: 4px solid var(--primary);
+      text-align: center;
+    }
+
+    /* أنماط حالة التحميل المستمرة */
+    .loading-box { display: block; margin: 20px 0; }
+    .loading-icon { font-size: 3rem; animation: bounce 1.2s infinite ease-in-out; display: inline-block; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .data-table { width: 100%; margin-top: 20px; border-collapse: collapse; display: none; }
+    .data-table tr { border-bottom: 1px solid #eee; }
+    .data-table td { padding: 12px 8px; text-align: right; font-size: 0.95rem; }
+    .data-label { font-weight: 700; color: var(--primary); width: 35%; }
+
+    /* صناديق الرسائل التنبيهية */
+    .msg-box { padding: 15px; border-radius: 12px; font-size: 0.95rem; line-height: 1.6; margin-top: 15px; display: none; text-align: right; }
+    .msg-box.success { background-color: #e6f4ea; color: #137333; border: 1px solid #ceead6; }
+    .msg-box.danger { background-color: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; }
+    .msg-box.info { background-color: #fef7e0; color: #b06000; border: 1px solid #feebc8; text-align: center; }
+    .msg-box a { color: #1a73e8; text-decoration: underline; font-weight: 700; }
+
+    .btn-action {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+      font-size: 0.95rem;
+    }
+    .btn-back {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      margin-top: 10px;
+    }
+
+    footer.site-footer {
+      text-align: center; font-size: 0.8rem; color: #ffffff;
+      background-color: var(--primary); padding: 8px; margin-top: 24px;
+      position: fixed; bottom: 0; width: 100%; left: 0;
+    }
+    @media (max-height: 600px) {
+      footer.site-footer { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-top">
+      <div class="header-logo">
+        <img src="LOGO.png" class="logo" alt="مخيم الهلال الجنوبي -بانياس-">
+        <div class="header-title">مخيم الهلال الجنوبي -بانياس-</div>
+      </div>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html">الصفحة الرئيسية</a>
+      <a href="events.html">آخر الفعاليات</a>
+      <a href="admins.html">أعضاء الإدارة</a>
+      <a href="services.html" class="active">الخدمات الإلكترونية</a>
+      <a href="gallery.html">ألبوم الصور</a>
+      <a href="map.html">الخريطة التفاعلية</a>
+      <a href="admin.html">خدمات الإدارة</a>
+      <a href="stats.html">إحصائيات المخيم</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="result-wrapper">
+      <div class="result-card">
+        <h3 style="margin-bottom: 5px; color: var(--primary);">نتائج كشوفات الفارس الشهم</h3>
+        <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 15px;">رقم الهوية المستعلم عنه: <strong id="displayNid" style="color: #000;">...</strong></p>
+        <p id="resNameArea" style="color: var(--primary); font-weight: 700; margin-bottom: 15px; font-size: 1.1rem; display: none;">الاسم: <span id="displayName"></span></p>
+
+        <div id="loadingSection" class="loading-box">
+          <div class="loading-icon">📦</div>
+          <p style="color: var(--primary); font-weight: 600; margin-top: 10px;">جاري فحص وتدقيق الكشوفات الحالية، يرجى الانتظار...</p>
+        </div>
+
+        <div id="notFoundBox" class="msg-box info"></div>
+
+        <table id="resultTable" class="data-table">
+          <tr id="row-status" style="display:none;"><td class="data-label">حالة الطرد:</td><td id="d-status" style="font-weight: 700;"></td></tr>
+          <tr id="row-date" style="display:none;"><td class="data-label">تاريخ الاستلام السابق:</td><td id="d-date"></td></tr>
+          <tr id="row-type" style="display:none;"><td class="data-label">نوع المساعدة:</td><td id="d-type"></td></tr>
+          <tr id="row-side" style="display:none;"><td class="data-label">جهة التسليم:</td><td id="d-side"></td></tr>
+          <tr id="row-receiver" style="display:none;"><td class="data-label">اسم المستلم:</td><td id="d-receiver"></td></tr>
+          <tr id="row-reason" style="display:none;"><td class="data-label">سبب المنع:</td><td id="d-reason" style="color: var(--danger); font-weight: bold;"></td></tr>
+        </table>
+
+        <button class="btn-action btn-back" onclick="window.history.back()">⬅️ العودة لصفحة الخدمات</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    جميع الحقوق محفوظة &copy; مخيم الهلال الجنوبي -بانياس-  &copy;  تصميم م. أحمد ماضي 
+  </footer>
+
+  <script>
+    // سيتم وضع رابط الـ Apps Script الجديد هنا في الخطوة القادمة
+    const ALFARES_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzGbmQOMQwAjRh1tUBzX56a4E2O926SvaPkJw0QC36KVXpkL6zdJf64DdBXs-8OxJ_h/exec";
+
+    // استخراج رقم الهوية الممرر تلقائياً من الرابط العلوى لقراءته
+    const urlParams = new URLSearchParams(window.location.search);
+    const nid = urlParams.get('nid');
+
+    if (nid && nid.trim() !== "") {
+      document.getElementById('displayNid').textContent = nid.trim();
+      fetchAlfaresStatus(nid.trim());
+    } else {
+      document.getElementById('loadingSection').style.display = 'none';
+      const notFoundBox = document.getElementById('notFoundBox');
+      notFoundBox.className = "msg-box danger";
+      notFoundBox.style.display = "block";
+      notFoundBox.textContent = "⚠️ خطأ: لم يتم جلب رقم الهوية بشكل صحيح، يرجى العودة للخلف وتجربة تسجيل الدخول مجدداً.";
+    }
+
+    async function fetchAlfaresStatus(residentNid) {
+      const loadingSection = document.getElementById('loadingSection');
+      const notFoundBox = document.getElementById('notFoundBox');
+      const resultTable = document.getElementById('resultTable');
+
+      try {
+        const response = await fetch(ALFARES_SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "checkAlfares", nid: residentNid })
+        });
+        const data = await response.json();
+
+        // إخفاء مؤشر التحميل
+        loadingSection.style.display = 'none';
+
+        if (data.status === "allowed") {
+          // الحالة: موجود في ورقة "يحق لهم"
+          document.getElementById('d-status').textContent = data.data.status || "يحق له الاستلام";
+          document.getElementById('d-status').style.color = "var(--success)";
+          
+          document.getElementById('row-status').style.display = "table-row";
+          resultTable.style.display = "table";
+
+        } else if (data.status === "not_allowed") {
+          // الحالة: موجود في ورقة "لا يحق لهم"
+          if(data.data.name) {
+            document.getElementById('displayName').textContent = data.data.name;
+            document.getElementById('resNameArea').style.display = "block";
+          }
+          document.getElementById('d-status').textContent = data.data.status || "لا يحق له الاستلام حالياً";
+          document.getElementById('d-status').style.color = "var(--danger)";
+          document.getElementById('d-date').textContent = data.data.date || "---";
+          document.getElementById('d-type').textContent = data.data.type || "---";
+          document.getElementById('d-side').textContent = data.data.side || "---";
+          document.getElementById('d-receiver').textContent = data.data.receiver || "---";
+          document.getElementById('d-reason').textContent = data.data.reason || "---";
+
+          // إظهار الصفوف الخاصة بالورقة الثانية بالكامل وبشكل ديناميكي
+          document.getElementById('row-status').style.display = "table-row";
+          document.getElementById('row-date').style.display = "table-row";
+          document.getElementById('row-type').style.display = "table-row";
+          document.getElementById('row-side').style.display = "table-row";
+          document.getElementById('row-receiver').style.display = "table-row";
+          document.getElementById('row-reason').style.display = "table-row";
+          
+          resultTable.style.display = "table";
+
+        } else {
+          // الحالة: رقم الهوية غير مسجل في الورقتين
+          notFoundBox.className = "msg-box info";
+          notFoundBox.style.display = "block";
+          notFoundBox.innerHTML = `⚠️ الاسم غير موجود في السجلات الرجاء تحديث بياناتك على موقع الفارس الشهم لاضافة اسمك في القريب العاجل على الرابط التالي:<br><br><a href="https://aid.alfaresalshahm.com/single-reg" target="_blank">اضغط هنا للانتقال إلى موقع الفارس الشهم</a>`;
+        }
+
+      } catch (error) {
+        loadingSection.style.display = 'none';
+        notFoundBox.className = "msg-box danger";
+        notFoundBox.style.display = "block";
+        notFoundBox.textContent = "❌ حدث خطأ أثناء الاتصال بالخادم وقراءة البيانات، يرجى المحاولة مرة أخرى لاحقاً.";
+      }
+    }
+  </script>
+</body>
+</html>
